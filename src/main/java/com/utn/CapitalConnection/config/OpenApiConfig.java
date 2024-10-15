@@ -11,7 +11,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("API de Billetera Virtual")
+                .info(new Info().title("API de Crowdfunding")
                         .description("Documentación de la API para la aplicación de Capital Connection")
                         .version("1.0.0")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")))

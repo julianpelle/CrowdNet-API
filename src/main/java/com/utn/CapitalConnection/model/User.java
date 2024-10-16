@@ -24,12 +24,12 @@ public abstract class User{
 
     protected Category industry;
 
-    protected String adress;
+    protected Address address;
 
     public User() {
     }
 
-    public User(String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, String adress) {
+    public User(String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, Address address) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -37,10 +37,10 @@ public abstract class User{
         this.wallet = wallet;
         this.yearsOfExperience = yearsOfExperience;
         this.industry = industry;
-        this.adress = adress;
+        this.address = address;
     }
 
-    public User(Long id, String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, String adress) {
+    public User(Long id, String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, Address address) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -49,7 +49,7 @@ public abstract class User{
         this.wallet = wallet;
         this.yearsOfExperience = yearsOfExperience;
         this.industry = industry;
-        this.adress = adress;
+        this.address = address;
     }
 
     public Long getId() {
@@ -116,12 +116,12 @@ public abstract class User{
         this.industry = industry;
     }
 
-    public String getAdress() {
-        return adress;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override
@@ -129,12 +129,12 @@ public abstract class User{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return yearsOfExperience == user.yearsOfExperience && Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(dateOfBirth, user.dateOfBirth) && Objects.equals(wallet, user.wallet) && industry == user.industry && Objects.equals(adress, user.adress);
+        return yearsOfExperience == user.yearsOfExperience && Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(email, user.email) && Objects.equals(dateOfBirth, user.dateOfBirth) && Objects.equals(wallet, user.wallet) && industry == user.industry && Objects.equals(address, user.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, adress);
+        return Objects.hash(id, name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, address);
     }
 
     @Override
@@ -148,7 +148,7 @@ public abstract class User{
                 ", wallet=" + wallet +
                 ", yearsOfExperience=" + yearsOfExperience +
                 ", industry=" + industry +
-                ", adress='" + adress + '\'' +
+                ", adress='" + address + '\'' +
                 '}';
     }
 

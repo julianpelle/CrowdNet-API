@@ -1,5 +1,6 @@
 package com.utn.CapitalConnection.model;
 
+import com.utn.CapitalConnection.entity.AddressEntity;
 import com.utn.CapitalConnection.types.Category;
 
 import java.math.BigDecimal;
@@ -18,17 +19,18 @@ public class Entrepreneur extends User{
 
     }
 
-    public Entrepreneur(String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, String adress, float successRate, String cbu ) {
-        super(name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, adress);
+    public Entrepreneur(String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, Address address, float successRate, String cbu ) {
+        super(name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, address);
         this.successRate = successRate;
         this.cbu = cbu;
     }
 
-    public Entrepreneur(Long id, String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, String adress, float successRate, String cbu ) {
-        super(id, name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, adress);
+    public Entrepreneur(Long id, String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, Address address, float successRate, String cbu ) {
+        super(id, name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, address);
         this.successRate = successRate;
         this.cbu = cbu;
     }
+
 
     public float getSuccessRate() {
         return successRate;

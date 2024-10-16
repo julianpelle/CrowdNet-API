@@ -6,21 +6,21 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
-public class Investestor extends User{
+public class Investor extends User{
 
     private BigDecimal PortfolioValue;
 
 
-    public Investestor() {
+    public Investor() {
     }
 
-    public Investestor(String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, String adress, BigDecimal portfolioValue) {
-        super(name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, adress);
+    public Investor(String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, Address address, BigDecimal portfolioValue) {
+        super(name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, address);
         PortfolioValue = portfolioValue;
     }
 
-    public Investestor(Long id, String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, String adress, BigDecimal portfolioValue) {
-        super(id, name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, adress);
+    public Investor(Long id, String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, Address address, BigDecimal portfolioValue) {
+        super(id, name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, address);
         PortfolioValue = portfolioValue;
     }
 
@@ -37,7 +37,7 @@ public class Investestor extends User{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        Investestor that = (Investestor) o;
+        Investor that = (Investor) o;
         return Objects.equals(PortfolioValue, that.PortfolioValue);
     }
 
@@ -48,7 +48,7 @@ public class Investestor extends User{
 
     @Override
     public String toString() {
-        return "Investestor{" +
+        return "Investor{" +
                 "PortfolioValue=" + PortfolioValue +
                 '}';
     }

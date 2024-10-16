@@ -5,22 +5,19 @@ import java.util.Objects;
 public class Review {
 
     private Long idReview;
-   private Long idUser;
     private float stars;
     private String reviewText;
 
     public Review() {
     }
 
-    public Review(Long idUser, float stars, String reviewText) {
-        this.idUser = idUser;
+    public Review(float stars, String reviewText) {
         this.stars = stars;
         this.reviewText = reviewText;
     }
 
-    public Review(Long idReview, Long idUser, float stars, String reviewText) {
+    public Review(Long idReview, float stars, String reviewText) {
         this.idReview = idReview;
-        this.idUser = idUser;
         this.stars = stars;
         this.reviewText = reviewText;
     }
@@ -33,13 +30,6 @@ public class Review {
         this.idReview = idReview;
     }
 
-    public Long getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
-    }
 
     public float getStars() {
         return stars;
@@ -61,19 +51,18 @@ public class Review {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Review review)) return false;
-        return Float.compare(review.stars, stars) == 0 && Objects.equals(idReview, review.idReview) && Objects.equals(idUser, review.idUser) && Objects.equals(reviewText, review.reviewText);
+        return Float.compare(review.stars, stars) == 0 && Objects.equals(idReview, review.idReview) && Objects.equals(reviewText, review.reviewText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idReview, idUser, stars, reviewText);
+        return Objects.hash(idReview, stars, reviewText);
     }
 
     @Override
     public String toString() {
         return "Review{" +
                 "idReview=" + idReview +
-                ", idUser=" + idUser +
                 ", stars=" + stars +
                 ", reviewText='" + reviewText + '\'' +
                 '}';

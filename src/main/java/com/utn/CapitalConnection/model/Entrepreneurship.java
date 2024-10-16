@@ -15,7 +15,6 @@ private String description;
 private ArrayList<String> videos;
 private float goal;
 private Category category;
-
 private List<Review> reviewList;
 
     public Entrepreneurship() {

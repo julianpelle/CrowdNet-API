@@ -2,6 +2,7 @@ package com.utn.CapitalConnection.service;
 
 import com.utn.CapitalConnection.entity.InvestorEntity;
 import com.utn.CapitalConnection.exception.InvestorNonExistingException;
+import com.utn.CapitalConnection.exception.InvalidPortfolioValueException;
 import com.utn.CapitalConnection.repository.InvestorRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ public class InvestorService extends UserService<InvestorEntity> {
         this.investorRepository = investorRepository;
     }
 
-
     public List<InvestorEntity> findAllUsers() {
         return investorRepository.findAll();
     }
@@ -32,7 +32,11 @@ public class InvestorService extends UserService<InvestorEntity> {
     }
 
     public InvestorEntity saveUser(@Valid InvestorEntity investor) {
-        return investorRepository.save(investor);
+        try {
+            return investorRepository.save(investor);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving investor: " + e.getMessage());
+        }
     }
 
     public void deleteUser(Long id) throws InvestorNonExistingException {
@@ -43,6 +47,9 @@ public class InvestorService extends UserService<InvestorEntity> {
     }
 
     public List<InvestorEntity> findInvestorsByPortfolioValue(BigDecimal minPortfolioValue) {
+        if (minPortfolioValue.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InvalidPortfolioValueException("Number cant be negative");
+        }
         return investorRepository.findInvestorsByPortfolioValue(minPortfolioValue);
     }
 
@@ -51,6 +58,9 @@ public class InvestorService extends UserService<InvestorEntity> {
     }
 
     public List<InvestorEntity> findInvestorsByPortfolioValueRange(BigDecimal minPortfolioValue, BigDecimal maxPortfolioValue) {
+        if (minPortfolioValue.compareTo(BigDecimal.ZERO) < 0 || maxPortfolioValue.compareTo(BigDecimal.ZERO) < 0) {
+            throw new InvalidPortfolioValueException("Numbers cant be negatives");
+        }
         return investorRepository.findInvestorsByPortfolioRange(minPortfolioValue, maxPortfolioValue);
     }
 }

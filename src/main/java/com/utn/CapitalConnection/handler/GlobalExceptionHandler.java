@@ -1,6 +1,7 @@
 package com.utn.CapitalConnection.handler;
 
 import com.utn.CapitalConnection.exception.EntrepreneurNonExistingException;
+import com.utn.CapitalConnection.exception.InvalidPortfolioValueException;
 import com.utn.CapitalConnection.exception.InsufficientFundsException;
 import com.utn.CapitalConnection.exception.InvalidDateException;
 import com.utn.CapitalConnection.exception.InvalidDateOfBirthException;
@@ -122,6 +123,17 @@ public class GlobalExceptionHandler {
     })
     @ExceptionHandler(UniqueConstraintViolationException.class)
     public ResponseEntity<String> handleUniqueConstraintViolation(UniqueConstraintViolationException ex) {
+        String message = ex.getMessage();
+        log.registerAction(LogCode.USER_DONT_FINDED, message);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Invalid minimum portfolio value",
+                    content = @Content(schema = @Schema(implementation = Map.Entry.class), examples = @ExampleObject(value = "{ \"message\": \"El valor mínimo de cartera no puede ser negativo\" }")))
+    })
+    @ExceptionHandler(InvalidPortfolioValueException.class)
+    public ResponseEntity<String> handleInvalidPortfolioValue(InvalidPortfolioValueException ex) {
         String message = ex.getMessage();
         log.registerAction(LogCode.USER_DONT_FINDED, message);
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);

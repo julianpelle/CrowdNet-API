@@ -1,5 +1,7 @@
 package com.utn.CapitalConnection.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -7,22 +9,32 @@ public class Notification {
 
     private Long id;
 
+    @NotBlank(message = "Message cannot be blank")
     private String message;
 
+    @NotNull(message = "Timestamp is required")
     private Timestamp dateTimeStamp;
 
     public Notification() {
     }
 
     public Notification(String message, Timestamp dateTimeStamp) {
-        this.message = message;
-        this.dateTimeStamp = dateTimeStamp;
+        try {
+            setMessage(message);
+            setDateTimeStamp(dateTimeStamp);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error during initialization: " + e.getMessage());
+        }
     }
 
     public Notification(Long id, String message, Timestamp dateTimeStamp) {
         this.id = id;
-        this.message = message;
-        this.dateTimeStamp = dateTimeStamp;
+        try {
+            setMessage(message);
+            setDateTimeStamp(dateTimeStamp);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error during initialization: " + e.getMessage());
+        }
     }
 
     public Long getId() {
@@ -38,7 +50,14 @@ public class Notification {
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        try {
+            if (message == null || message.trim().isEmpty()) {
+                throw new IllegalArgumentException("Message cannot be null or blank");
+            }
+            this.message = message;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error setting message: " + e.getMessage());
+        }
     }
 
     public Timestamp getDateTimeStamp() {
@@ -46,7 +65,14 @@ public class Notification {
     }
 
     public void setDateTimeStamp(Timestamp dateTimeStamp) {
-        this.dateTimeStamp = dateTimeStamp;
+        try {
+            if (dateTimeStamp == null) {
+                throw new IllegalArgumentException("Timestamp is required");
+            }
+            this.dateTimeStamp = dateTimeStamp;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error setting timestamp: " + e.getMessage());
+        }
     }
 
     @Override
@@ -54,7 +80,9 @@ public class Notification {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Notification that = (Notification) o;
-        return Objects.equals(id, that.id) && Objects.equals(message, that.message) && Objects.equals(dateTimeStamp, that.dateTimeStamp);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(message, that.message) &&
+                Objects.equals(dateTimeStamp, that.dateTimeStamp);
     }
 
     @Override

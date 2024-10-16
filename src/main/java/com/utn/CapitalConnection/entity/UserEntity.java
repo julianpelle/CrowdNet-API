@@ -2,6 +2,8 @@ package com.utn.CapitalConnection.entity;
 
 import com.utn.CapitalConnection.types.Category;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,36 +11,49 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 public abstract class UserEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name is required")
+    @Size(max = 50, message = "Name must not exceed 50 characters")
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
+    @NotBlank(message = "Surname is required")
+    @Size(max = 50, message = "Surname must not exceed 50 characters")
     @Column(name = "surname", nullable = false, length = 50)
     private String surname;
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     @Column(unique = true, nullable = false)
     private String email;
 
+    @NotNull(message = "Date of birth is required")
     @Column(nullable = false)
     private LocalDate dateOfBirth;
 
+    @NotNull(message = "Wallet balance is required")
+    @Positive(message = "Wallet balance must be positive")
     @Column(nullable = false)
     private BigDecimal wallet;
 
+    @Min(value = 0, message = "Years of experience cannot be negative")
     @Column(nullable = false)
     private int yearsOfExperience;
 
+    @NotNull(message = "Category is required")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Category category;
 
+    @NotNull(message = "Address is required")
+    @Valid
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "id", unique = true)
     private AddressEntity address;
+
 
     @Column(insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime registrationDate;

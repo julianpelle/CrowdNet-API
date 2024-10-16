@@ -1,16 +1,18 @@
 package com.utn.CapitalConnection.service;
 
 import com.utn.CapitalConnection.entity.EntrepreneurEntity;
+import com.utn.CapitalConnection.exception.EntrepreneurNonExistingException;
 import com.utn.CapitalConnection.repository.EntrepreneurRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EntrepreneurService extends UserService<EntrepreneurEntity> {
@@ -28,10 +30,8 @@ public class EntrepreneurService extends UserService<EntrepreneurEntity> {
             @ApiResponse(responseCode = "400", description = "Invalid minimum success rate")
     })
     public List<EntrepreneurEntity> findEntrepreneursBySuccessRate(
-            @Parameter(description = "Minimum success rate", example = "75.0") float minSuccessRate) {
-        if (minSuccessRate < 0) {
-            throw new IllegalArgumentException("Minimum success rate must be non-negative.");
-        }
+            @Parameter(description = "Minimum success rate", example = "75.0")
+            @NotNull @Positive float minSuccessRate) {
         return entrepreneurRepository.findEntrepreneursBySuccessRate(minSuccessRate);
     }
 
@@ -41,26 +41,11 @@ public class EntrepreneurService extends UserService<EntrepreneurEntity> {
             @ApiResponse(responseCode = "400", description = "Invalid success rate values")
     })
     public List<EntrepreneurEntity> findEntrepreneursBySuccessRateRange(
-            @Parameter(description = "Minimum success rate", example = "50.0") Float minSuccessRate,
-            @Parameter(description = "Maximum success rate", example = "90.0") Float maxSuccessRate) {
-        if (minSuccessRate == null || maxSuccessRate == null || minSuccessRate < 0 || maxSuccessRate < 0) {
-            throw new IllegalArgumentException("Invalid success rate values.");
-        }
+            @Parameter(description = "Minimum success rate", example = "50.0")
+            @NotNull Float minSuccessRate,
+            @Parameter(description = "Maximum success rate", example = "90.0")
+            @NotNull Float maxSuccessRate) {
         return entrepreneurRepository.findEntrepreneursBySuccessRateRange(minSuccessRate, maxSuccessRate);
-    }
-
-    @Operation(summary = "Find an entrepreneur by CBU")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Entrepreneur found"),
-            @ApiResponse(responseCode = "400", description = "CBU cannot be null or empty"),
-            @ApiResponse(responseCode = "404", description = "Entrepreneur not found")
-    })
-    public Optional<EntrepreneurEntity> findEntrepreneurByCbu(
-            @Parameter(description = "CBU of the entrepreneur", example = "1234567890123456789012") String cbu) {
-        if (cbu == null || cbu.isEmpty()) {
-            throw new IllegalArgumentException("CBU cannot be null or empty.");
-        }
-        return entrepreneurRepository.findEntrepreneurByCbu(cbu);
     }
 
     @Operation(summary = "Update an entrepreneur")
@@ -68,30 +53,47 @@ public class EntrepreneurService extends UserService<EntrepreneurEntity> {
             @ApiResponse(responseCode = "200", description = "Entrepreneur updated successfully"),
             @ApiResponse(responseCode = "404", description = "Entrepreneur not found")
     })
-    public EntrepreneurEntity updateUser(
-            @Parameter(description = "Unique entrepreneur identifier", example = "1") Long id,
-            @Parameter(description = "Updated entrepreneur data") EntrepreneurEntity entrepreneurUpdates) {
-        Optional<EntrepreneurEntity> optionalEntrepreneur = entrepreneurRepository.findById(id);
+    public EntrepreneurEntity updateUser(Long id, EntrepreneurEntity entrepreneurUpdates) throws EntrepreneurNonExistingException {
+        try {
+            EntrepreneurEntity existingEntrepreneur = entrepreneurRepository.findById(id)
+                    .orElseThrow(() -> new EntrepreneurNonExistingException(id));
 
-        if (optionalEntrepreneur.isPresent()) {
-            EntrepreneurEntity existingEntrepreneur = optionalEntrepreneur.get();
+            // Validaciones
+            if (entrepreneurUpdates.getName() == null || entrepreneurUpdates.getName().isBlank()) {
+                throw new IllegalArgumentException("El nombre no puede estar vacío");
+            }
+            if (entrepreneurUpdates.getSurname() == null || entrepreneurUpdates.getSurname().isBlank()) {
+                throw new IllegalArgumentException("El apellido no puede estar vacío");
+            }
+            if (entrepreneurUpdates.getEmail() == null || entrepreneurUpdates.getEmail().isBlank()) {
+                throw new IllegalArgumentException("El email no puede estar vacío");
+            }
+            if (entrepreneurUpdates.getSuccessRate() < 0) {
+                throw new IllegalArgumentException("La tasa de éxito debe ser positiva");
+            }
+            if (entrepreneurUpdates.getCbu() == null || entrepreneurUpdates.getCbu().isBlank()) {
+                throw new IllegalArgumentException("El CBU no puede estar vacío");
+            }
 
-            // Update fields as needed
-            if (entrepreneurUpdates.getName() != null) {
-                existingEntrepreneur.setName(entrepreneurUpdates.getName());
-            }
-            if (entrepreneurUpdates.getSurname() != null) {
-                existingEntrepreneur.setSurname(entrepreneurUpdates.getSurname());
-            }
-            if (entrepreneurUpdates.getEmail() != null) {
-                existingEntrepreneur.setEmail(entrepreneurUpdates.getEmail());
-            }
-            // Add more fields as necessary
+            existingEntrepreneur.setName(entrepreneurUpdates.getName());
+            existingEntrepreneur.setSurname(entrepreneurUpdates.getSurname());
+            existingEntrepreneur.setEmail(entrepreneurUpdates.getEmail());
+            existingEntrepreneur.setDateOfBirth(entrepreneurUpdates.getDateOfBirth());
+            existingEntrepreneur.setWallet(entrepreneurUpdates.getWallet());
+            existingEntrepreneur.setYearsOfExperience(entrepreneurUpdates.getYearsOfExperience());
+            existingEntrepreneur.setCategory(entrepreneurUpdates.getCategory());
+            existingEntrepreneur.setAddress(entrepreneurUpdates.getAddress());
+            existingEntrepreneur.setSuccessRate(entrepreneurUpdates.getSuccessRate());
+            existingEntrepreneur.setCbu(entrepreneurUpdates.getCbu());
 
             return entrepreneurRepository.save(existingEntrepreneur);
-        }
+        } catch (EntrepreneurNonExistingException e) {
+            throw e;
+        } catch (IllegalArgumentException e) {
 
-        // Return null or throw an exception if the entrepreneur is not found
-        return null; // Or throw an exception, depending on your error handling
+            throw new IllegalArgumentException("Datos inválidos: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Error al actualizar el emprendedor: " + e.getMessage(), e);
+        }
     }
 }

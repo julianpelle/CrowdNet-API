@@ -1,13 +1,14 @@
 package com.utn.CapitalConnection.entity;
 
 import com.utn.CapitalConnection.types.TypeAddress;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "address")
 public class AddressEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,7 +19,8 @@ public class AddressEntity {
     @OneToOne(mappedBy = "address")
     private EntrepreneurEntity entrepreneur;
 
-    @NotBlank
+    @NotBlank(message = "Street is required")
+    @Column(nullable = false)
     private String street;
 
     @Column
@@ -27,20 +29,20 @@ public class AddressEntity {
     @Column
     private String other;
 
-    @NotBlank
+    @NotBlank(message = "Locality is required")
     @Column(nullable = false)
     private String locality;
 
-    @NotBlank
+    @NotBlank(message = "Province is required")
     @Column(nullable = false)
     private String province;
 
+    @NotNull(message = "Address type is required")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TypeAddress type;
 
-    public AddressEntity() {
-    }
+    public AddressEntity() {}
 
     public AddressEntity(InvestorEntity investor, EntrepreneurEntity entrepreneur, String street, String number, String other, String locality, String province, TypeAddress type) {
         this.investor = investor;
@@ -52,6 +54,7 @@ public class AddressEntity {
         this.province = province;
         this.type = type;
     }
+
 
     public Long getId() {
         return id;
@@ -85,7 +88,7 @@ public class AddressEntity {
         return province;
     }
 
-    public TypeAddress getType() {
+    public @NotNull TypeAddress getType() {
         return type;
     }
 
@@ -101,7 +104,7 @@ public class AddressEntity {
         this.entrepreneur = entrepreneur;
     }
 
-    public void setStreet(@NotBlank String street) {
+    public void setStreet(@NotBlank(message = "Street is required") String street) {
         this.street = street;
     }
 
@@ -113,15 +116,15 @@ public class AddressEntity {
         this.other = other;
     }
 
-    public void setLocality(@NotBlank String locality) {
+    public void setLocality(@NotBlank(message = "Locality is required") String locality) {
         this.locality = locality;
     }
 
-    public void setProvince(@NotBlank String province) {
+    public void setProvince(@NotBlank(message = "Province is required") String province) {
         this.province = province;
     }
 
-    public void setType(TypeAddress type) {
+    public void setType(@NotNull(message = "Type is required") TypeAddress type) {
         this.type = type;
     }
 }

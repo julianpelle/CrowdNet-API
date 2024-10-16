@@ -6,32 +6,43 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 @Entity
 @Table(name = "entrepreneurships")
 public class EntrepreneurshipEntity {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name must not be blank")
     @Column(nullable = false, length = 50)
     private String name;
+
+    @NotBlank(message = "Description must not be blank")
+    @Column(nullable = false)
+    private String description;
+
+    @Positive(message = "Goal must be a positive number")
+    @Column(nullable = false)
+    private float goal;
+
+    @NotNull(message = "Category must not be null")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
 
     @ManyToMany(mappedBy = "entrepreneurships", fetch = FetchType.LAZY)
     private List<PictureEntity> pictures = new ArrayList<>();
 
-    @Column(nullable = false)
-    private String description;
 
     @ManyToMany(mappedBy = "entrepreneurships", fetch = FetchType.LAZY)
     private List<VideoEntity> videos = new ArrayList<>();
 
-    @Column(nullable = false)
-    private float goal;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Category category;
 
     @ManyToMany(mappedBy = "entrepreneurships", fetch = FetchType.LAZY)
     private List<ReviewEntity> reviews = new ArrayList<>();
@@ -41,9 +52,8 @@ public class EntrepreneurshipEntity {
 
 
     @ManyToMany(mappedBy = "entrepreneurships", fetch = FetchType.LAZY)
-    private List<EntrepreneurEntity> entrepreneurs = new ArrayList<>(); // Cambiar a EntrepreneurEntity
+    private List<EntrepreneurEntity> entrepreneurs = new ArrayList<>();
 
-    // Constructor, getters y setters
 
     public List<EntrepreneurEntity> getEntrepreneurs() {
         return entrepreneurs;

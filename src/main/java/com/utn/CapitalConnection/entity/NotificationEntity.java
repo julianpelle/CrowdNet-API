@@ -1,7 +1,8 @@
 package com.utn.CapitalConnection.entity;
 
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,9 +13,11 @@ public class NotificationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Message cannot be blank")
     @Column
     private String message;
 
+    @NotNull(message = "Shipping date is required")
     @Column(name = "shipping_date")
     private LocalDateTime shippingDate;
 
@@ -43,7 +46,14 @@ public class NotificationEntity {
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        try {
+            if (message == null || message.trim().isEmpty()) {
+                throw new IllegalArgumentException("Message cannot be null or blank");
+            }
+            this.message = message;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error setting message: " + e.getMessage());
+        }
     }
 
     public LocalDateTime getShippingDate() {
@@ -51,7 +61,14 @@ public class NotificationEntity {
     }
 
     public void setShippingDate(LocalDateTime shippingDate) {
-        this.shippingDate = shippingDate;
+        try {
+            if (shippingDate == null) {
+                throw new IllegalArgumentException("Shipping date is required");
+            }
+            this.shippingDate = shippingDate;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error setting shipping date: " + e.getMessage());
+        }
     }
 
     public List<InvestorEntity> getInvestors() {

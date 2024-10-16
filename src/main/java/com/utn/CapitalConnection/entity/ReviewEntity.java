@@ -1,6 +1,10 @@
 package com.utn.CapitalConnection.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.util.List;
 
 @Entity
@@ -11,9 +15,12 @@ public class ReviewEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Stars must not be null")
+    @Positive(message = "Stars must be positive")
     @Column(nullable = false)
     private float stars;
 
+    @NotBlank(message = "Review text must not be blank")
     @Column(nullable = false)
     private String reviewText;
 

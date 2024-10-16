@@ -21,7 +21,7 @@ public class UserMapper {
         } else if (userEntity instanceof EntrepreneurEntity) {
             return mapEntrepreneur((EntrepreneurEntity) userEntity);
         }
-        return null; // Consider handling unexpected cases more gracefully
+        return null;
     }
 
     private Investor mapInvestor(InvestorEntity investorEntity) {

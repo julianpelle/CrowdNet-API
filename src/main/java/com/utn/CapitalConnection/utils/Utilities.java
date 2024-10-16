@@ -1,7 +1,6 @@
 package com.utn.CapitalConnection.utils;
 
-import com.utn.CapitalConnection.entity.UserEntity;
-import com.utn.CapitalConnection.model.User;
+
 import org.springframework.stereotype.Component;
 
 @Component

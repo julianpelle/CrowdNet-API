@@ -1,17 +1,19 @@
 package com.utn.CapitalConnection.controller;
 
 import com.utn.CapitalConnection.entity.EntrepreneurEntity;
+import com.utn.CapitalConnection.exception.EntrepreneurNonExistingException;
+import com.utn.CapitalConnection.exception.InvestorNonExistingException;
 import com.utn.CapitalConnection.service.EntrepreneurService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/entrepreneurs")
+@RequestMapping("/entrepreneurs")
 public class EntrepreneurController extends UserController<EntrepreneurEntity> {
 
     private final EntrepreneurService entrepreneurService;
@@ -22,43 +24,59 @@ public class EntrepreneurController extends UserController<EntrepreneurEntity> {
         this.entrepreneurService = entrepreneurService;
     }
 
-    @Operation(summary = "Registrar un nuevo emprendedor",
-            description = "Crea un nuevo emprendedor en la base de datos.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Emprendedor registrado exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Solicitud no válida"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
-    @PostMapping("/register")  // Ruta ajustada
-    public EntrepreneurEntity registerEntrepreneur(
+    @PostMapping("/register")
+    public ResponseEntity<EntrepreneurEntity> registerEntrepreneur(
             @Parameter(description = "Detalles del emprendedor a registrar")
-            @RequestBody EntrepreneurEntity entrepreneur) {
-        return entrepreneurService.saveUser(entrepreneur);
+            @Valid @RequestBody EntrepreneurEntity entrepreneur) {
+        try {
+            EntrepreneurEntity savedEntrepreneur = entrepreneurService.saveUser(entrepreneur);
+            return ResponseEntity.status(201).body(savedEntrepreneur);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
-    @Operation(summary = "Actualizar un emprendedor existente",
-            description = "Actualiza los detalles de un emprendedor en la base de datos.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Emprendedor actualizado exitosamente"),
-            @ApiResponse(responseCode = "404", description = "Emprendedor no encontrado"),
-            @ApiResponse(responseCode = "400", description = "Solicitud no válida"),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
-    @PatchMapping("/{id}") // Ruta para actualizar el emprendedor
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<EntrepreneurEntity> getUserById(
+            @Parameter(description = "Identificador único de la cuenta", example = "1") @PathVariable Long id) {
+        try {
+            EntrepreneurEntity entrepreneur = entrepreneurService.findUserById(id);
+            return ResponseEntity.ok(entrepreneur);
+        } catch (InvestorNonExistingException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            // Manejo de excepciones genérico
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PutMapping("/{id}")
     public ResponseEntity<EntrepreneurEntity> updateEntrepreneur(
             @Parameter(description = "ID del emprendedor a actualizar")
-            @PathVariable Long id,
+            @PathVariable @NotNull Long id,
             @Parameter(description = "Detalles del emprendedor a actualizar")
-            @RequestBody EntrepreneurEntity entrepreneurUpdates) {
-
-        EntrepreneurEntity updatedEntrepreneur = entrepreneurService.updateUser(id, entrepreneurUpdates);
-
-        if (updatedEntrepreneur == null) {
+            @Valid @RequestBody EntrepreneurEntity entrepreneurUpdates) {
+        try {
+            EntrepreneurEntity updatedEntrepreneur = entrepreneurService.updateUser(id, entrepreneurUpdates);
+            return ResponseEntity.ok(updatedEntrepreneur);
+        } catch (EntrepreneurNonExistingException e) {
             return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
         }
-
-        return ResponseEntity.ok(updatedEntrepreneur);
     }
 
-    // Agregar otros métodos específicos para emprendedores, si es necesario
+    @DeleteMapping("/{id}")
+    @Override
+    public ResponseEntity<Void> deleteUser(@Parameter(description = "Identificador único de la cuenta", example = "1") @PathVariable Long id) {
+        try {
+            entrepreneurService.deleteUser(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntrepreneurNonExistingException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

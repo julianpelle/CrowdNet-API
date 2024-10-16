@@ -1,36 +1,37 @@
 package com.utn.CapitalConnection.model;
 
-import com.utn.CapitalConnection.entity.AddressEntity;
 import com.utn.CapitalConnection.types.Category;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
-import java.security.PublicKey;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
-public class Entrepreneur extends User{
+public class Entrepreneur extends User {
 
+    @Positive
     private float successRate;
+
+    @NotBlank
     private String cbu;
+
     private List<Entrepreneurship> entrepreneurshipList;
 
     public Entrepreneur() {
-
     }
 
-    public Entrepreneur(String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, Address address, float successRate, String cbu ) {
+    public Entrepreneur(String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, Address address, float successRate, String cbu) {
         super(name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, address);
         this.successRate = successRate;
         this.cbu = cbu;
     }
 
-    public Entrepreneur(Long id, String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, Address address, float successRate, String cbu ) {
+    public Entrepreneur(Long id, String name, String surname, String email, Date dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category industry, Address address, float successRate, String cbu) {
         super(id, name, surname, email, dateOfBirth, wallet, yearsOfExperience, industry, address);
         this.successRate = successRate;
         this.cbu = cbu;
     }
-
 
     public float getSuccessRate() {
         return successRate;
@@ -56,7 +57,7 @@ public class Entrepreneur extends User{
         this.entrepreneurshipList = entrepreneurshipList;
     }
 
-    public void addEntrepreneurship(Entrepreneurship entrepreneurship){
+    public void addEntrepreneurship(Entrepreneurship entrepreneurship) {
         this.entrepreneurshipList.add(entrepreneurship);
     }
 }

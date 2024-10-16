@@ -1,6 +1,7 @@
 package com.utn.CapitalConnection.model;
 
 import com.utn.CapitalConnection.types.Category;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 public class Investor extends User{
 
+    @NotNull(message = "Portfolio value cannot be null")
     private BigDecimal PortfolioValue;
 
 

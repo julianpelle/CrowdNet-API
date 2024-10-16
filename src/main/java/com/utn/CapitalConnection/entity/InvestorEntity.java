@@ -2,6 +2,8 @@ package com.utn.CapitalConnection.entity;
 
 import com.utn.CapitalConnection.types.Category;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,6 +14,7 @@ import java.util.List;
 @Table(name = "investor")
 public class InvestorEntity extends UserEntity {
 
+    @NotNull(message = "Portfolio value is required.")
     @Column(nullable = false)
     private BigDecimal portfolioValue;
 
@@ -24,7 +27,11 @@ public class InvestorEntity extends UserEntity {
     public InvestorEntity() {
     }
 
-    public InvestorEntity(String name, String surname, String email, LocalDate dateOfBirth, BigDecimal wallet, int yearsOfExperience, Category category, AddressEntity address, BigDecimal portfolioValue, List<NotificationEntity> notifications) {
+    public InvestorEntity(@NotBlank String name, @NotBlank String surname, @NotBlank String email,
+                          @NotNull LocalDate dateOfBirth, @NotNull BigDecimal wallet,
+                          int yearsOfExperience, @NotNull Category category,
+                          @NotNull AddressEntity address, @NotNull BigDecimal portfolioValue,
+                          List<NotificationEntity> notifications) {
         super(name, surname, email, dateOfBirth, wallet, yearsOfExperience, category, address);
         this.portfolioValue = portfolioValue;
         this.notifications = notifications;

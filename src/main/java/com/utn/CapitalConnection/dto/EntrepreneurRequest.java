@@ -1,6 +1,5 @@
 package com.utn.CapitalConnection.dto;
 
-import com.utn.CapitalConnection.model.Entrepreneur;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 

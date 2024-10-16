@@ -2,6 +2,8 @@ package com.utn.CapitalConnection.entity;
 
 import com.utn.CapitalConnection.types.Category;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,25 +14,25 @@ import java.util.List;
 @Table(name = "entrepreneurs")
 public class EntrepreneurEntity extends UserEntity {
 
+    @Positive(message = "The number wanna be positive")
     @Column(nullable = false)
-    private float successRate;  // Corregido a successRate
+    private float successRate;
 
+    @NotBlank(message = "The CBU cant be empty")
     @Column(nullable = false)
     private String cbu;
 
     @ManyToMany(mappedBy = "entrepreneurs", fetch = FetchType.LAZY)
     private List<NotificationEntity> notifications = new ArrayList<>();
 
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "entrepreneur_entrepreneurship", // Nombre de la tabla de unión
-            joinColumns = @JoinColumn(name = "entrepreneur_id"), // Columna que hace referencia al emprendedor
-            inverseJoinColumns = @JoinColumn(name = "entrepreneurship_id") // Columna que hace referencia al emprendimiento
+            name = "entrepreneur_entrepreneurship",
+            joinColumns = @JoinColumn(name = "entrepreneur_id"),
+            inverseJoinColumns = @JoinColumn(name = "entrepreneurship_id")
     )
-    private List<EntrepreneurshipEntity> entrepreneurships = new ArrayList<>(); // Cambiar a EntrepreneurshipEntity
+    private List<EntrepreneurshipEntity> entrepreneurships = new ArrayList<>();
 
-    // Constructor, getters y setters
 
     public List<EntrepreneurshipEntity> getEntrepreneurships() {
         return entrepreneurships;
@@ -38,17 +40,6 @@ public class EntrepreneurEntity extends UserEntity {
 
     public void setEntrepreneurships(List<EntrepreneurshipEntity> entrepreneurships) {
         this.entrepreneurships = entrepreneurships;
-    }
-
-    // Métodos para agregar y eliminar emprendimientos
-    public void addEntrepreneurship(EntrepreneurshipEntity entrepreneurship) {
-        entrepreneurships.add(entrepreneurship);
-        entrepreneurship.getEntrepreneurs().add(this);  // Agregar relación inversa
-    }
-
-    public void removeEntrepreneurship(EntrepreneurshipEntity entrepreneurship) {
-        entrepreneurships.remove(entrepreneurship);
-        entrepreneurship.getEntrepreneurs().remove(this);  // Eliminar relación inversa
     }
 
     public EntrepreneurEntity() {
@@ -75,12 +66,12 @@ public class EntrepreneurEntity extends UserEntity {
 
     public void addNotification(NotificationEntity notification) {
         notifications.add(notification);
-        notification.getEntrepreneurs().add(this);  // Corrección del nombre de la lista
+        notification.getEntrepreneurs().add(this);
     }
 
     public void removeNotification(NotificationEntity notification) {
         notifications.remove(notification);
-        notification.getEntrepreneurs().remove(this);  // Corrección del nombre de la lista
+        notification.getEntrepreneurs().remove(this);
     }
 
     public void setSuccessRate(float successRate) {

@@ -12,7 +12,7 @@ public class DonationRequest {
     @Schema(description = "Donation amount", example = "100.50")
     private BigDecimal amount;
 
-    @Schema(description = "Date of the donation", example = "2023-10-15T10:15:30")
+    @Schema(description = "Date of the donation", example = "2024-10-15T10:15:30")
     private LocalDateTime date;
 
     @Schema(description = "ID of the related entrepreneurship", example = "5")

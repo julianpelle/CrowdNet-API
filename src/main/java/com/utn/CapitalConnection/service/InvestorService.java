@@ -1,11 +1,9 @@
 package com.utn.CapitalConnection.service;
 
 import com.utn.CapitalConnection.entity.InvestorEntity;
+import com.utn.CapitalConnection.exception.InvestorNonExistingException;
 import com.utn.CapitalConnection.repository.InvestorRepository;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,34 +21,36 @@ public class InvestorService extends UserService<InvestorEntity> {
         this.investorRepository = investorRepository;
     }
 
-    @Operation(summary = "Find investors by minimum portfolio value")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "List of investors retrieved successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid minimum portfolio value")
-    })
-    public List<InvestorEntity> findInvestorsByPortfolioValue(
-            @Parameter(description = "Minimum portfolio value", example = "10000.00") BigDecimal minPortfolioValue) {
+
+    public List<InvestorEntity> findAllUsers() {
+        return investorRepository.findAll();
+    }
+
+    public InvestorEntity findUserById(Long id) throws InvestorNonExistingException {
+        return investorRepository.findById(id)
+                .orElseThrow(() -> new InvestorNonExistingException("Investor not found with ID: " + id));
+    }
+
+    public InvestorEntity saveUser(@Valid InvestorEntity investor) {
+        return investorRepository.save(investor);
+    }
+
+    public void deleteUser(Long id) throws InvestorNonExistingException {
+        if (!investorRepository.existsById(id)) {
+            throw new InvestorNonExistingException("Investor not found with ID: " + id);
+        }
+        investorRepository.deleteById(id);
+    }
+
+    public List<InvestorEntity> findInvestorsByPortfolioValue(BigDecimal minPortfolioValue) {
         return investorRepository.findInvestorsByPortfolioValue(minPortfolioValue);
     }
 
-    @Operation(summary = "Find investors by minimum years of experience")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "List of investors retrieved successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid minimum years of experience")
-    })
-    public List<InvestorEntity> findInvestorsByExperience(
-            @Parameter(description = "Minimum years of experience", example = "5") int minYearsOfExperience) {
+    public List<InvestorEntity> findInvestorsByExperience(int minYearsOfExperience) {
         return investorRepository.findInvestorsByExperience(minYearsOfExperience);
     }
 
-    @Operation(summary = "Find investors within a portfolio value range")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "List of investors retrieved successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid portfolio value range")
-    })
-    public List<InvestorEntity> findInvestorsByPortfolioValueRange(
-            @Parameter(description = "Minimum portfolio value", example = "10000.00") BigDecimal minPortfolioValue,
-            @Parameter(description = "Maximum portfolio value", example = "50000.00") BigDecimal maxPortfolioValue) {
+    public List<InvestorEntity> findInvestorsByPortfolioValueRange(BigDecimal minPortfolioValue, BigDecimal maxPortfolioValue) {
         return investorRepository.findInvestorsByPortfolioRange(minPortfolioValue, maxPortfolioValue);
     }
 }

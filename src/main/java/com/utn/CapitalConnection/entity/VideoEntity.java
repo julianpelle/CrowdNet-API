@@ -1,7 +1,9 @@
 package com.utn.CapitalConnection.entity;
 
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -12,9 +14,12 @@ public class VideoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String link_image;
+    @NotBlank(message = "Video link cannot be blank")
+    @Size(max = 255, message = "Video link must not exceed 255 characters")
+    @Column(name = "linkVideo", nullable = false)
+    private String linkVideo;
 
+    @NotNull(message = "Entrepreneurships list cannot be null")
     @ManyToMany
     @JoinTable(
             name = "videos_x_entrepreneurship",
@@ -22,15 +27,14 @@ public class VideoEntity {
             inverseJoinColumns = @JoinColumn(name = "entrepreneurship_id"))
     private List<EntrepreneurshipEntity> entrepreneurships;
 
-    public VideoEntity() {
-    }
+    public VideoEntity() {}
 
     public Long getId() {
         return id;
     }
 
     public String getLinkImage() {
-        return link_image;
+        return linkVideo;
     }
 
     public List<EntrepreneurshipEntity> getEntrepreneurships() {
@@ -41,11 +45,11 @@ public class VideoEntity {
         this.id = id;
     }
 
-    public void setLink_image(String link_image) {
-        this.link_image = link_image;
+    public void setLinkVideo(@NotBlank String linkVideo) {
+        this.linkVideo = linkVideo;
     }
 
-    public void setEntrepreneurships(List<EntrepreneurshipEntity> entrepreneurships) {
+    public void setEntrepreneurships(@NotNull List<EntrepreneurshipEntity> entrepreneurships) {
         this.entrepreneurships = entrepreneurships;
     }
 }

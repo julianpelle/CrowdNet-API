@@ -1,6 +1,8 @@
 package com.utn.CapitalConnection.model;
 
 import com.utn.CapitalConnection.types.Category;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -10,20 +12,31 @@ public abstract class User{
 
     protected Long id;
 
+    @NotBlank(message = "Name is required")
     protected String name;
 
+    @NotBlank(message = "Surname is required")
     protected String surname;
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     protected String email;
 
+    @NotNull(message = "Date of birth is required")
     protected Date dateOfBirth;
 
+    @NotNull(message = "Wallet balance is required")
+    @Positive(message = "Wallet balance must be positive")
     protected BigDecimal wallet;
 
+    @Min(value = 0, message = "Years of experience cannot be negative")
     protected int yearsOfExperience;
 
+    @NotNull(message = "Industry category is required")
     protected Category industry;
 
+    @NotNull(message = "Address is required")
+    @Valid
     protected Address address;
 
     public User() {

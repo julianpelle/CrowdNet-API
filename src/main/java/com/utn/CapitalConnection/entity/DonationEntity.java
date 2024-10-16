@@ -20,12 +20,10 @@ public class DonationEntity {
     private LocalDateTime date;
 
 
-    // Asociación con Entrepreneurship
     @ManyToOne
     @JoinColumn(name = "entrepreneurship_id", nullable = false)
     private EntrepreneurshipEntity entrepreneurship;
 
-    // Asociación con InvestorEntity
     @ManyToOne
     @JoinColumn(name = "investor_id", nullable = false)
     private InvestorEntity investor;

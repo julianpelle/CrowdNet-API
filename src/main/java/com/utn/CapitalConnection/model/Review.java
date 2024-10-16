@@ -1,11 +1,20 @@
 package com.utn.CapitalConnection.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.util.Objects;
 
 public class Review {
 
     private Long idReview;
+
+    @NotNull(message = "Stars must not be null")
+    @Positive(message = "Stars must be positive")
     private float stars;
+
+    @NotBlank(message = "Review text must not be blank")
     private String reviewText;
 
     public Review() {

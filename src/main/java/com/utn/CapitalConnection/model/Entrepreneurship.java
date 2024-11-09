@@ -83,8 +83,8 @@ private List<Review> reviewList;
         return images;
     }
 
-    public void setImages(List<String> pictures) {
-        this.images = pictures;
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
     public String getDescription() {
@@ -130,8 +130,8 @@ private List<Review> reviewList;
     public void addVideo(String hrefVideo){
         this.videos.add(hrefVideo);
     }
-    public void addPicture(String hrefPicture){
-        this.images.add(hrefPicture);
+    public void addImages(String hrefImage){
+        this.images.add(hrefImage);
     }
     public void addReview(Review review){
         this.reviewList.add(review);

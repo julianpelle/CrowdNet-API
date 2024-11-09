@@ -12,8 +12,8 @@ public class EntrepreneurshipRequest {
     @Schema(description = "Name of the entrepreneurship", example = "Eco Solutions")
     private String name;
 
-    @Schema(description = "Pictures of the entrepreneurship saved on Links")
-    private ArrayList<String> pictures;
+    @Schema(description = "Images of the entrepreneurship saved on Links")
+    private ArrayList<String> images;
 
     @Schema(description = "Description of the entrepreneurship", example = "A project focused on eco-friendly solutions.")
     private String description;
@@ -35,8 +35,8 @@ public class EntrepreneurshipRequest {
         return name;
     }
 
-    public ArrayList<String> getPictures() {
-        return pictures;
+    public ArrayList<String> getImages() {
+        return images;
     }
 
     public String getDescription() {

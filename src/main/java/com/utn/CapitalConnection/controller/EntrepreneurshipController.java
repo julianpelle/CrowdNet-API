@@ -1,5 +1,6 @@
 package com.utn.CapitalConnection.controller;
 
+import com.utn.CapitalConnection.dto.EntrepreneurshipRequest;
 import com.utn.CapitalConnection.entity.EntrepreneurshipEntity;
 import com.utn.CapitalConnection.entity.ReviewEntity;
 import com.utn.CapitalConnection.model.Entrepreneurship;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,37 +25,26 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 @RestController
 @RequestMapping("/entrepreneurships")
 public class EntrepreneurshipController {
 
-    private final EntrepreneurshipService entrepreneurshipService;
-
     @Autowired
-    public EntrepreneurshipController(EntrepreneurshipService entrepreneurshipService) {
-        this.entrepreneurshipService = entrepreneurshipService;
+    private EntrepreneurshipService entrepreneurshipService;
+
+    @GetMapping
+    public ResponseEntity<Page<EntrepreneurshipEntity>> getEntrepreneurships(Pageable pageable) {
+        Page<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipService.getAllEntrepreneurships(pageable);
+        return ResponseEntity.ok(entrepreneurships);
     }
 
-    @GetMapping("/entrepreneurships") public Page<Entrepreneurship> getEntrepreneurships( @Parameter(description = "Filtro opcional para buscar emprendimientos por nombre", example = "Mi Startup") @RequestParam(required = false) String name, @Parameter(description = "Filtro opcional para buscar emprendimientos con una calificación específica", example = "4.5") @RequestParam(required = false) Float stars, @Parameter(description = "Filtro opcional para buscar emprendimientos con una meta específica", example = "50000") @RequestParam(required = false) BigDecimal goal, @Parameter(description = "Ordenar la lista de emprendimientos por id, nombre o meta", example = "name") @RequestParam(required = false, defaultValue = "id") OrderEntrepreneurship order, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) { Pageable pageable = PageRequest.of(page, size, Sort.by(order.getProperty()).ascending()); return entrepreneurshipService.findEntrepreneurship(name, stars, goal, pageable); }
-
-    @Operation(summary = "Get all entrepreneurships")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found all entrepreneurships",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = EntrepreneurshipEntity.class)))
-    })
-    @GetMapping("/all")
-    public List<EntrepreneurshipEntity> getAllEntrepreneurships() {
-        return entrepreneurshipService.getAllEntrepreneurships();
-    }
 
 
     @Operation(summary = "Get entrepreneurships by user id", description = "Returns a list of entrepreneurships that match a specific user.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Reviews found")
     })
-    @GetMapping("/{id_user}")
+    @GetMapping("/u/{id_user}")
     public List<EntrepreneurshipEntity> getReviewsByUserId(@Parameter(description = "Id  to search for")
                                                  @PathVariable @Positive String Id_user) {
         return entrepreneurshipService.getEntrepreneurshipByUserId(Id_user);
@@ -87,6 +78,24 @@ public class EntrepreneurshipController {
     }
 
 
+    @Operation(summary = "Get entrepreneurship by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Entrepreneurship found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EntrepreneurshipEntity.class))),
+            @ApiResponse(responseCode = "404", description = "Entrepreneurship not found",
+                    content = @Content)
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<EntrepreneurshipEntity> getEntrepreneurshipById(
+            @Parameter(description = "ID of the entrepreneurship to find") @PathVariable Long id) {
+        try {
+            EntrepreneurshipEntity entrepreneurship = entrepreneurshipService.getEntrepreneurshipById(id);
+            return ResponseEntity.ok(entrepreneurship);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @Operation(summary = "Update an existing entrepreneurship")
     @ApiResponses(value = {
@@ -97,8 +106,14 @@ public class EntrepreneurshipController {
                     content = @Content)
     })
     @PutMapping("/{id}")
-    public ResponseEntity<EntrepreneurshipEntity> updateEntrepreneurship(
-            @PathVariable Long id, @RequestBody EntrepreneurshipEntity updatedEntrepreneurship) {
+    public ResponseEntity<?> updateEntrepreneurship(
+            @PathVariable(required = false) Long id,
+            @RequestBody EntrepreneurshipEntity updatedEntrepreneurship) {
+
+        if (id == null) {
+            return ResponseEntity.badRequest().body("ID is missing or invalid.");
+        }
+
         return ResponseEntity.ok(entrepreneurshipService.updateEntrepreneurship(id, updatedEntrepreneurship));
     }
 
@@ -111,9 +126,11 @@ public class EntrepreneurshipController {
                     content = @Content)
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<EntrepreneurshipEntity> partiallyUpdateEntrepreneurship(
-            @PathVariable Long id, @RequestBody EntrepreneurshipEntity partialUpdate) {
-        return ResponseEntity.ok(entrepreneurshipService.partiallyUpdateEntrepreneurship(id, partialUpdate.getName(), partialUpdate.getGoal()));
+    public ResponseEntity<EntrepreneurshipEntity> patchEntrepreneurship(
+            @PathVariable Long id,
+            @RequestBody EntrepreneurshipRequest patchData) {
+        EntrepreneurshipEntity updated = entrepreneurshipService.patchEntrepreneurship(id, patchData);
+        return ResponseEntity.ok(updated);
     }
 
     @Operation(summary = "Delete an entrepreneurship by ID")

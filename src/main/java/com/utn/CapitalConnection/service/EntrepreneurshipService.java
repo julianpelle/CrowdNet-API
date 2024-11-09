@@ -1,14 +1,19 @@
 package com.utn.CapitalConnection.service;
 
+import com.utn.CapitalConnection.dto.EntrepreneurshipRequest;
 import com.utn.CapitalConnection.entity.EntrepreneurshipEntity;
-import com.utn.CapitalConnection.entity.PictureEntity;
 import com.utn.CapitalConnection.entity.ReviewEntity;
-import com.utn.CapitalConnection.entity.VideoEntity;
 import com.utn.CapitalConnection.exception.NoEntrepreneurshipsFoundException;
+import com.utn.CapitalConnection.exception.ResourceNotFoundException;
 import com.utn.CapitalConnection.model.Entrepreneurship;
 import com.utn.CapitalConnection.model.Review;
 import com.utn.CapitalConnection.repository.EntrepreneurshipRepository;
-import com.utn.CapitalConnection.types.Category;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -20,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EntrepreneurshipService {
@@ -27,16 +33,34 @@ public class EntrepreneurshipService {
     @Autowired
     private EntrepreneurshipRepository entrepreneurshipRepository;
 
-    public List<EntrepreneurshipEntity> getAllEntrepreneurships() {
-        List<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipRepository.findAll();
-        if (entrepreneurships.isEmpty()) {
-            throw new NoEntrepreneurshipsFoundException("No entrepreneurships found.");
-        }
-        return entrepreneurships;
+    public EntrepreneurshipEntity getEntrepreneurshipById(Long id) {
+        return entrepreneurshipRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Entrepreneurship not found with id: " + id));
     }
+    // Método para obtener emprendimientos con filtrado
+    public Page<Entrepreneurship> findEntrepreneurship(String name, Float stars, BigDecimal goal, Pageable pageable) {
+        Page<EntrepreneurshipEntity> entity;
 
-    public Page<Entrepreneurship> findEntrepreneurship(String name, Float stars, BigDecimal goal, Pageable pageable) { Page<EntrepreneurshipEntity> entity; // Filtrado
-        if (name != null && stars != null && goal != null) { entity = entrepreneurshipRepository.findByNameStarsGoal(name, stars, goal, pageable); } else if (name != null && stars != null) { entity = entrepreneurshipRepository.findByNameAndStars(name, stars, pageable); } else if (name != null && goal != null) { entity = entrepreneurshipRepository.findByNameAndGoal(name, goal, pageable); } else if (stars != null && goal != null) { entity = entrepreneurshipRepository.findByStarsAndGoal(stars, goal, pageable); } else if (name != null) { entity = entrepreneurshipRepository.findByNameContainingIgnoreCase(name, pageable); } else if (stars != null) { entity = entrepreneurshipRepository.findByStars(stars, pageable); } else if (goal != null) { entity = entrepreneurshipRepository.findByGoal(goal, pageable); } else { entity = entrepreneurshipRepository.findAll(pageable); } return entity.map(this::entityToEntrepreneurship);}
+        // Filtrado
+        if (name != null && stars != null && goal != null) {
+            entity = entrepreneurshipRepository.findByNameStarsGoal(name, stars, goal, pageable);
+        } else if (name != null && stars != null) {
+            entity = entrepreneurshipRepository.findByNameAndStars(name, stars, pageable);
+        } else if (name != null && goal != null) {
+            entity = entrepreneurshipRepository.findByNameAndGoal(name, goal, pageable);
+        } else if (stars != null && goal != null) {
+            entity = entrepreneurshipRepository.findByStarsAndGoal(stars, goal, pageable);
+        } else if (name != null) {
+            entity = entrepreneurshipRepository.findByNameContainingIgnoreCase(name, pageable);
+        } else if (stars != null) {
+            entity = entrepreneurshipRepository.findByStars(stars, pageable);
+        } else if (goal != null) {
+            entity = entrepreneurshipRepository.findByGoal(goal, pageable);
+        } else {
+            entity = entrepreneurshipRepository.findAll(pageable);
+        }
+        return entity.map(this::entityToEntrepreneurship);
+    }
 
     private Entrepreneurship entityToEntrepreneurship(EntrepreneurshipEntity entity) {
         Entrepreneurship entrepreneurship = new Entrepreneurship();
@@ -46,7 +70,7 @@ public class EntrepreneurshipService {
         entrepreneurship.setDescription(entity.getDescription());
         entrepreneurship.setGoal(entity.getGoal());
         entrepreneurship.setCategory(entity.getCategory());
-        entrepreneurship.setImages(entity.getPictures());
+        entrepreneurship.setImages(entity.getImages());
         entrepreneurship.setVideos(entity.getVideos());
 
 
@@ -65,14 +89,10 @@ public class EntrepreneurshipService {
     }
 
 
-    // GET all entrepreneurships
-    public List<EntrepreneurshipEntity> getAllEntrepreneurships() {
-        List<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipRepository.findAll();
-        if (entrepreneurships.isEmpty()) {
-            throw new NoEntrepreneurshipsFoundException("No entrepreneurships found.");
-        }
-        return entrepreneurships;
+    public Page<EntrepreneurshipEntity> getAllEntrepreneurships(Pageable pageable) {
+        return entrepreneurshipRepository.findAll(pageable);
     }
+
 
 
     // GET by exact name
@@ -133,5 +153,15 @@ public class EntrepreneurshipService {
             throw new NoEntrepreneurshipsFoundException("Entrepreneurship not found with id: " + id);
         }
         entrepreneurshipRepository.deleteById(id);
+    }
+    public EntrepreneurshipEntity patchEntrepreneurship(Long id, EntrepreneurshipRequest patchData) {
+        EntrepreneurshipEntity entrepreneurship = entrepreneurshipRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Entrepreneurship not found"));
+
+        if (patchData.getImages() != null) { // Borra o actualiza si llega un array vacío
+            entrepreneurship.setImages(patchData.getImages());
+        }
+
+        return entrepreneurshipRepository.save(entrepreneurship);
     }
 }

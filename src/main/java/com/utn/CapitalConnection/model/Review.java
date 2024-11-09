@@ -10,6 +10,8 @@ public class Review {
 
     private Long idReview;
 
+    private String idUser;
+
     @NotNull(message = "Stars must not be null")
     @Positive(message = "Stars must be positive")
     private float stars;
@@ -25,8 +27,9 @@ public class Review {
         this.reviewText = reviewText;
     }
 
-    public Review(Long idReview, float stars, String reviewText) {
+    public Review(Long idReview,String idUser, float stars, String reviewText) {
         this.idReview = idReview;
+        this.idUser = idUser;
         this.stars = stars;
         this.reviewText = reviewText;
     }

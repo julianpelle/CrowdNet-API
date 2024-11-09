@@ -2,6 +2,7 @@ package com.utn.CapitalConnection.entity;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class EntrepreneurshipEntity {
     public EntrepreneurshipEntity() {
     }
 
-    public EntrepreneurshipEntity(String name, List<PictureEntity> pictures, String description, List<VideoEntity> videos, float goal, Category category, List<ReviewEntity> reviews) {
+    public EntrepreneurshipEntity(String name,String id_user, ArrayList<String> images, String description, ArrayList<String> videos, BigDecimal goal, String category, List<ReviewEntity> reviews) {
         this.name = name;
         this.id_user = id_user;
         this.images = images;
@@ -90,7 +91,7 @@ public class EntrepreneurshipEntity {
         return name;
     }
 
-    public List<String> getPictures() {
+    public List<String> getImages() {
         return images;
     }
 
@@ -102,11 +103,11 @@ public class EntrepreneurshipEntity {
         return videos;
     }
 
-    public float getGoal() {
+    public BigDecimal getGoal() {
         return goal;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
@@ -122,7 +123,7 @@ public class EntrepreneurshipEntity {
         this.name = name;
     }
 
-    public void setPictures(List<String> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
@@ -134,7 +135,7 @@ public class EntrepreneurshipEntity {
         this.videos = videos;
     }
 
-    public void setGoal(float goal) {
+    public void setGoal(BigDecimal goal) {
         this.goal = goal;
     }
 

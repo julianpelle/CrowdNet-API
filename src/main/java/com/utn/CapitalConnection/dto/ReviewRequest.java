@@ -8,8 +8,8 @@ public class ReviewRequest {
     @Schema(description = "ID of the review", example = "1")
     private Long idReview;
 
-    @Schema(description = "ID of the user who wrote the review", example = "3")
-    private Long idUser;
+    @Schema(description = "ID of the user who wrote the review", example = "Three")
+    private String idUser;
 
     @Schema(description = "Star rating of the review", example = "4.5")
     private float stars;
@@ -21,7 +21,7 @@ public class ReviewRequest {
         return idReview;
     }
 
-    public Long getIdUser() {
+    public String getIdUser() {
         return idUser;
     }
 

@@ -33,7 +33,7 @@ public class VideoEntity {
         return id;
     }
 
-    public String getLinkImage() {
+    public String getLinkVideo() {
         return linkVideo;
     }
 

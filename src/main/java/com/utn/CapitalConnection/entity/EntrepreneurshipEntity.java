@@ -1,6 +1,5 @@
 package com.utn.CapitalConnection.entity;
 
-import com.utn.CapitalConnection.types.Category;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -19,6 +18,9 @@ public class EntrepreneurshipEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = true) // Permite que sea null
+    private String id_user;
+
     @NotBlank(message = "Name must not be blank")
     @Column(nullable = false, length = 50)
     private String name;
@@ -29,51 +31,55 @@ public class EntrepreneurshipEntity {
 
     @Positive(message = "Goal must be a positive number")
     @Column(nullable = false)
-    private float goal;
+    private BigDecimal goal;
 
-    @NotNull(message = "Category must not be null")
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Category category;
+    private String category;
 
-    @ManyToMany(mappedBy = "entrepreneurships", fetch = FetchType.LAZY)
-    private List<PictureEntity> pictures = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "entrepreneurship_images", joinColumns = @JoinColumn(name = "entrepreneurship_id"))
+    @Column(name = "link_image")
+    private List<String> images;
 
+    @ElementCollection
+    @CollectionTable(name = "entrepreneurship_videos", joinColumns = @JoinColumn(name = "entrepreneurship_id"))
+    @Column(name = "link_video")
+    private List<String> videos;
 
-    @ManyToMany(mappedBy = "entrepreneurships", fetch = FetchType.LAZY)
-    private List<VideoEntity> videos = new ArrayList<>();
-
-
-    @ManyToMany(mappedBy = "entrepreneurships", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "entrepreneurship_id")
     private List<ReviewEntity> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "entrepreneurship")
-    private List<DonationEntity> donations;
 
 
-    @ManyToMany(mappedBy = "entrepreneurships", fetch = FetchType.LAZY)
-    private List<EntrepreneurEntity> entrepreneurs = new ArrayList<>();
-
-
-    public List<EntrepreneurEntity> getEntrepreneurs() {
-        return entrepreneurs;
+    public void addReview(ReviewEntity review) {
+        if (review.getEntrepreneurships() == null) {
+            review.setEntrepreneurships(new ArrayList<>());
+        }
+        review.getEntrepreneurships().add(this);
     }
 
-    public void setEntrepreneurs(List<EntrepreneurEntity> entrepreneurs) {
-        this.entrepreneurs = entrepreneurs;
-    }
 
     public EntrepreneurshipEntity() {
     }
 
     public EntrepreneurshipEntity(String name, List<PictureEntity> pictures, String description, List<VideoEntity> videos, float goal, Category category, List<ReviewEntity> reviews) {
         this.name = name;
-        this.pictures = pictures;
+        this.id_user = id_user;
+        this.images = images;
         this.description = description;
         this.videos = videos;
         this.goal = goal;
         this.category = category;
         this.reviews = reviews;
+    }
+
+    public String getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
     }
 
     public Long getId() {
@@ -84,15 +90,15 @@ public class EntrepreneurshipEntity {
         return name;
     }
 
-    public List<PictureEntity> getPictures() {
-        return pictures;
+    public List<String> getPictures() {
+        return images;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public List<VideoEntity> getVideos() {
+    public List<String> getVideos() {
         return videos;
     }
 
@@ -116,15 +122,15 @@ public class EntrepreneurshipEntity {
         this.name = name;
     }
 
-    public void setPictures(List<PictureEntity> pictures) {
-        this.pictures = pictures;
+    public void setPictures(List<String> images) {
+        this.images = images;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setVideos(List<VideoEntity> videos) {
+    public void setVideos(List<String> videos) {
         this.videos = videos;
     }
 
@@ -132,7 +138,7 @@ public class EntrepreneurshipEntity {
         this.goal = goal;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
@@ -140,7 +146,5 @@ public class EntrepreneurshipEntity {
         this.reviews = reviews;
     }
 
-    public void setDonations(List<DonationEntity> donations) {
-        this.donations = donations;
-    }
+
 }

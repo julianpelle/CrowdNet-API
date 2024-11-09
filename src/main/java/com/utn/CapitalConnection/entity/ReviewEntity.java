@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,6 +15,10 @@ public class ReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull(message = "ID User must not be null")
+    @Column(nullable = false)
+    private String idUser;
 
     @NotNull(message = "Stars must not be null")
     @Positive(message = "Stars must be positive")
@@ -29,15 +34,17 @@ public class ReviewEntity {
             name = "reviews_about_entrepreneurship",
             joinColumns = @JoinColumn(name = "review_id"),
             inverseJoinColumns = @JoinColumn(name = "entrepreneurship_id"))
-    private List<EntrepreneurshipEntity> entrepreneurships;
+    private List<EntrepreneurshipEntity> entrepreneurships = new ArrayList<>();
 
     public ReviewEntity() {
     }
 
-    public ReviewEntity(Long id, float stars, String reviewText) {
+    public ReviewEntity(Long id,String idUser, float stars, String reviewText) {
+        this.idUser = idUser;
         this.id = id;
         this.stars = stars;
         this.reviewText = reviewText;
+        this.entrepreneurships = new ArrayList<>();
     }
 
     public Long getId() {
@@ -50,6 +57,14 @@ public class ReviewEntity {
 
     public String getReviewText() {
         return reviewText;
+    }
+
+    public @NotNull(message = "Stars must not be null") @Positive(message = "Stars must be positive") String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(@NotNull(message = "Stars must not be null") @Positive(message = "Stars must be positive") String idUser) {
+        this.idUser = idUser;
     }
 
     public List<EntrepreneurshipEntity> getEntrepreneurships() {

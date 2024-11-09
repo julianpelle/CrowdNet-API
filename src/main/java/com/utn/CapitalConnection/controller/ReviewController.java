@@ -64,6 +64,8 @@ public class ReviewController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
+
     @Operation(summary = "Update an existing review", description = "Updates the details of a review.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Review updated successfully"),
@@ -110,6 +112,16 @@ public class ReviewController {
     public List<ReviewEntity> getReviewsByStars(@Parameter(description = "Star rating to search for")
                                                 @PathVariable @Positive float stars) {
         return reviewService.getReviewsByStars(stars);
+    }
+
+    @Operation(summary = "Get reviews by user id", description = "Returns a list of reviews that match a specific user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reviews found")
+    })
+    @GetMapping("/{id_user}")
+    public List<ReviewEntity> getReviewsByUserId(@Parameter(description = "Id  to search for")
+                                                @PathVariable @Positive String Id_user) {
+        return reviewService.getReviewsByUserId(Id_user);
     }
 
     @Operation(summary = "Count reviews for an entrepreneurship", description = "Returns the number of reviews for a specific entrepreneurship.")

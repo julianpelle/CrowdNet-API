@@ -1,6 +1,5 @@
 package com.utn.CapitalConnection.dto;
 
-import com.utn.CapitalConnection.types.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 
@@ -26,7 +25,7 @@ public class EntrepreneurshipRequest {
     private float goal;
 
     @Schema(description = "Category of the entrepreneurship", example = "Technology")
-    private Category category;
+    private String category;
 
     public Long getId() {
         return id;
@@ -52,7 +51,7 @@ public class EntrepreneurshipRequest {
         return goal;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 

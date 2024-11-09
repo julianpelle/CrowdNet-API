@@ -1,17 +1,25 @@
 package com.utn.CapitalConnection.service;
 
 import com.utn.CapitalConnection.entity.EntrepreneurshipEntity;
+import com.utn.CapitalConnection.entity.PictureEntity;
+import com.utn.CapitalConnection.entity.ReviewEntity;
+import com.utn.CapitalConnection.entity.VideoEntity;
 import com.utn.CapitalConnection.exception.NoEntrepreneurshipsFoundException;
+import com.utn.CapitalConnection.model.Entrepreneurship;
+import com.utn.CapitalConnection.model.Review;
 import com.utn.CapitalConnection.repository.EntrepreneurshipRepository;
 import com.utn.CapitalConnection.types.Category;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EntrepreneurshipService {
@@ -27,68 +35,103 @@ public class EntrepreneurshipService {
         return entrepreneurships;
     }
 
+    public Page<Entrepreneurship> findEntrepreneurship(String name, Float stars, BigDecimal goal, Pageable pageable) { Page<EntrepreneurshipEntity> entity; // Filtrado
+        if (name != null && stars != null && goal != null) { entity = entrepreneurshipRepository.findByNameStarsGoal(name, stars, goal, pageable); } else if (name != null && stars != null) { entity = entrepreneurshipRepository.findByNameAndStars(name, stars, pageable); } else if (name != null && goal != null) { entity = entrepreneurshipRepository.findByNameAndGoal(name, goal, pageable); } else if (stars != null && goal != null) { entity = entrepreneurshipRepository.findByStarsAndGoal(stars, goal, pageable); } else if (name != null) { entity = entrepreneurshipRepository.findByNameContainingIgnoreCase(name, pageable); } else if (stars != null) { entity = entrepreneurshipRepository.findByStars(stars, pageable); } else if (goal != null) { entity = entrepreneurshipRepository.findByGoal(goal, pageable); } else { entity = entrepreneurshipRepository.findAll(pageable); } return entity.map(this::entityToEntrepreneurship);}
+
+    private Entrepreneurship entityToEntrepreneurship(EntrepreneurshipEntity entity) {
+        Entrepreneurship entrepreneurship = new Entrepreneurship();
+
+        entrepreneurship.setId(entity.getId());
+        entrepreneurship.setName(entity.getName());
+        entrepreneurship.setDescription(entity.getDescription());
+        entrepreneurship.setGoal(entity.getGoal());
+        entrepreneurship.setCategory(entity.getCategory());
+        entrepreneurship.setImages(entity.getPictures());
+        entrepreneurship.setVideos(entity.getVideos());
+
+
+
+        List<Review> reviews = new ArrayList<>();
+        for (ReviewEntity reviewEntity : entity.getReviews()) {
+            Review review = new Review();
+            review.setIdReview(reviewEntity.getId());
+            review.setStars(reviewEntity.getStars());
+            review.setReviewText(reviewEntity.getReviewText());
+            reviews.add(review);
+        }
+        entrepreneurship.setReviewList(reviews);
+
+        return entrepreneurship;
+    }
+
+
+    // GET all entrepreneurships
+    public List<EntrepreneurshipEntity> getAllEntrepreneurships() {
+        List<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipRepository.findAll();
+        if (entrepreneurships.isEmpty()) {
+            throw new NoEntrepreneurshipsFoundException("No entrepreneurships found.");
+        }
+        return entrepreneurships;
+    }
+
+
+    // GET by exact name
     public EntrepreneurshipEntity getEntrepreneurshipByName(@NotBlank String name) {
-        Optional<EntrepreneurshipEntity> entrepreneurship = entrepreneurshipRepository.findByName(name);
-        if (entrepreneurship.isPresent()) {
-            return entrepreneurship.get();
-        } else {
-            throw new NoEntrepreneurshipsFoundException("Entrepreneurship not found with name: " + name);
-        }
+        return entrepreneurshipRepository.findByName(name)
+                .orElseThrow(() -> new NoEntrepreneurshipsFoundException("Entrepreneurship not found with name: " + name));
     }
 
-    public List<EntrepreneurshipEntity> getEntrepreneurshipsByNameContaining(@NotBlank String name) {
-        List<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipRepository.findByNameContaining(name);
-        if (entrepreneurships.isEmpty()) {
-            throw new NoEntrepreneurshipsFoundException("No entrepreneurships found containing: " + name);
-        }
-        return entrepreneurships;
+    // POST create a new entrepreneurship
+    public EntrepreneurshipEntity createEntrepreneurship(EntrepreneurshipEntity entrepreneurship) {
+        System.out.println(entrepreneurship);
+        return entrepreneurshipRepository.save(entrepreneurship);
     }
 
-    public List<EntrepreneurshipEntity> getEntrepreneurshipsByCategory(@NotNull Category category) {
-        List<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipRepository.findByCategory(category);
-        if (entrepreneurships.isEmpty()) {
-            throw new NoEntrepreneurshipsFoundException("No entrepreneurships found in category: " + category);
-        }
-        return entrepreneurships;
+    // PUT update an entrepreneurship by ID
+    @Transactional
+    public EntrepreneurshipEntity updateEntrepreneurship(@NotNull Long id, EntrepreneurshipEntity updatedEntrepreneurship) {
+        EntrepreneurshipEntity entrepreneurship = entrepreneurshipRepository.findById(id)
+                .orElseThrow(() -> new NoEntrepreneurshipsFoundException("Entrepreneurship not found with id: " + id));
+
+        entrepreneurship.setName(updatedEntrepreneurship.getName());
+        entrepreneurship.setCategory(updatedEntrepreneurship.getCategory());
+        entrepreneurship.setGoal(updatedEntrepreneurship.getGoal());
+        entrepreneurship.setDescription(updatedEntrepreneurship.getDescription());
+
+        return entrepreneurshipRepository.save(entrepreneurship);
     }
 
-    public List<EntrepreneurshipEntity> getEntrepreneurshipsByMinimumGoal(@Positive float minGoal) {
-        List<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipRepository.findByMinimumGoal(minGoal);
-        if (entrepreneurships.isEmpty()) {
-            throw new NoEntrepreneurshipsFoundException("No entrepreneurships found with a minimum goal of: " + minGoal);
-        }
-        return entrepreneurships;
+    @Operation(summary = "Get ntrepreneurships by user creator",
+            description = "Returns a list of entrepreneurships that match a specific star rating.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Entrepreneurship found")
+    })
+    public List<EntrepreneurshipEntity> getEntrepreneurshipByUserId(@Parameter(description = "Star rating to search for")
+                                                 @Positive String id) {
+        return entrepreneurshipRepository.findByUserId(id);
     }
 
-    public List<EntrepreneurshipEntity> getEntrepreneurshipsByMaximumGoal(@Positive float maxGoal) {
-        List<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipRepository.findByMaximumGoal(maxGoal);
-        if (entrepreneurships.isEmpty()) {
-            throw new NoEntrepreneurshipsFoundException("No entrepreneurships found with a maximum goal of: " + maxGoal);
+    // PATCH partially update an entrepreneurship
+    @Transactional
+    public EntrepreneurshipEntity partiallyUpdateEntrepreneurship(@NotNull Long id, String name, BigDecimal goal) {
+        EntrepreneurshipEntity entrepreneurship = entrepreneurshipRepository.findById(id)
+                .orElseThrow(() -> new NoEntrepreneurshipsFoundException("Entrepreneurship not found with id: " + id));
+
+        if (name != null) {
+            entrepreneurship.setName(name);
         }
-        return entrepreneurships;
+        if (goal != null) {
+            entrepreneurship.setGoal(goal);
+        }
+
+        return entrepreneurshipRepository.save(entrepreneurship);
     }
 
-    public List<EntrepreneurshipEntity> getEntrepreneurshipsByGoalRange(Float minGoal, Float maxGoal) {
-        List<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipRepository.findByGoalRange(minGoal, maxGoal);
-        if (entrepreneurships.isEmpty()) {
-            throw new NoEntrepreneurshipsFoundException("No entrepreneurships found in the specified goal range.");
+    // DELETE an entrepreneurship by ID
+    public void deleteEntrepreneurship(@NotNull Long id) {
+        if (!entrepreneurshipRepository.existsById(id)) {
+            throw new NoEntrepreneurshipsFoundException("Entrepreneurship not found with id: " + id);
         }
-        return entrepreneurships;
-    }
-
-    public List<EntrepreneurshipEntity> getEntrepreneurshipsByEntrepreneurId(@NotNull Long entrepreneurId) {
-        List<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipRepository.findByEntrepreneurId(entrepreneurId);
-        if (entrepreneurships.isEmpty()) {
-            throw new NoEntrepreneurshipsFoundException("No entrepreneurships found for entrepreneur ID: " + entrepreneurId);
-        }
-        return entrepreneurships;
-    }
-
-    public List<EntrepreneurshipEntity> getEntrepreneurshipsByDescriptionContaining(@NotBlank String description) {
-        List<EntrepreneurshipEntity> entrepreneurships = entrepreneurshipRepository.findByDescriptionContaining(description);
-        if (entrepreneurships.isEmpty()) {
-            throw new NoEntrepreneurshipsFoundException("No entrepreneurships found containing: " + description);
-        }
-        return entrepreneurships;
+        entrepreneurshipRepository.deleteById(id);
     }
 }

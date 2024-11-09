@@ -114,6 +114,21 @@ public class ReviewService {
         return reviewRepository.findReviewsByStars(stars);
     }
 
+
+
+    @Operation(summary = "Get reviews by user comment",
+            description = "Returns a list of reviews that match a specific user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reviews found")
+    })
+    public List<ReviewEntity> getReviewsByUserId(@Parameter(description = "Id rating to search for")
+                                                @Positive String id) {
+        return reviewRepository.findByUserId(id);
+    }
+
+
+
+
     @Operation(summary = "Count reviews for an entrepreneurship",
             description = "Returns the number of reviews for a specific entrepreneurship.")
     @ApiResponses(value = {

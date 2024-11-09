@@ -39,6 +39,13 @@ public class Review {
         this.idReview = idReview;
     }
 
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
 
     public float getStars() {
         return stars;

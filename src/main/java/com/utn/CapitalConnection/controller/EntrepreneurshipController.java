@@ -70,9 +70,7 @@ public class EntrepreneurshipController {
         if (entrepreneurship.getId_user() == null) {
             entrepreneurship.setId_user("defaultUserId");
         }
-        if (entrepreneurship.getReviews() == null) {
-            entrepreneurship.setReviews(new ArrayList<>());
-        }
+
         EntrepreneurshipEntity createdEntrepreneurship = entrepreneurshipService.createEntrepreneurship(entrepreneurship);
         return new ResponseEntity<>(createdEntrepreneurship, HttpStatus.CREATED);
     }

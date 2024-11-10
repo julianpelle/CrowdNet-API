@@ -45,25 +45,10 @@ public interface EntrepreneurshipRepository extends JpaRepository<Entrepreneursh
     @Query("SELECT e FROM EntrepreneurshipEntity e WHERE SOUNDEX(e.name) = SOUNDEX(:name)")
     List<EntrepreneurshipEntity> findByNameSimilar(@Param("name") String name);
 
-    // Paginación por estrellas
-    @Query("SELECT e FROM EntrepreneurshipEntity e JOIN e.reviews r WHERE r.stars = :stars")
-    Page<EntrepreneurshipEntity> findByStars(@Param("stars") float stars, Pageable pageable);
 
     // Paginación por nombre y meta
     @Query("SELECT e FROM EntrepreneurshipEntity e WHERE LOWER(e.name) LIKE LOWER(CONCAT('%', :name, '%')) AND e.goal = :goal")
     Page<EntrepreneurshipEntity> findByNameAndGoal(@Param("name") String name, @Param("goal") BigDecimal goal, Pageable pageable);
-
-    // Paginación por nombre y estrellas
-    @Query("SELECT e FROM EntrepreneurshipEntity e JOIN e.reviews r WHERE LOWER(e.name) LIKE LOWER(CONCAT('%', :name, '%')) AND r.stars = :stars")
-    Page<EntrepreneurshipEntity> findByNameAndStars(@Param("name") String name, @Param("stars") float stars, Pageable pageable);
-
-    // Paginación por estrellas y meta
-    @Query("SELECT e FROM EntrepreneurshipEntity e JOIN e.reviews r WHERE r.stars = :stars AND e.goal = :goal")
-    Page<EntrepreneurshipEntity> findByStarsAndGoal(@Param("stars") float stars, @Param("goal") BigDecimal goal, Pageable pageable);
-
-    // Paginación por nombre, estrellas y meta
-    @Query("SELECT e FROM EntrepreneurshipEntity e JOIN e.reviews r WHERE LOWER(e.name) LIKE LOWER(CONCAT('%', :name, '%')) AND r.stars = :stars AND e.goal = :goal")
-    Page<EntrepreneurshipEntity> findByNameStarsGoal(@Param("name") String name, @Param("stars") float stars, @Param("goal") BigDecimal goal, Pageable pageable);
 
     // Paginación por descripción
     @Query("SELECT e FROM EntrepreneurshipEntity e WHERE LOWER(e.description) LIKE LOWER(CONCAT('%', :description, '%'))")

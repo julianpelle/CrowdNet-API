@@ -16,7 +16,6 @@ private String description;
 private List<String> videos;
 private BigDecimal goal;
 private String category;
-private List<Review> reviewList;
 
     public Entrepreneurship() {
     }
@@ -29,7 +28,6 @@ private List<Review> reviewList;
         this.videos = new ArrayList<>();
         this.goal = goal;
         this.category = category;
-        this.reviewList = new ArrayList<>();
     }
 
     public Entrepreneurship(Long id,String id_user, String name, String description, BigDecimal goal, String category) {
@@ -41,17 +39,6 @@ private List<Review> reviewList;
         this.videos = new ArrayList<>();
         this.goal = goal;
         this.category = category;
-    }
-
-    public float getAverageStars() {
-        if (reviewList.isEmpty()) {
-            return 0.0f;
-        }
-        float totalStars = reviewList.stream()
-                .map(Review::getStars)
-                .reduce(0.0f, Float::sum);
-
-        return totalStars / reviewList.size();
     }
 
 
@@ -119,31 +106,13 @@ private List<Review> reviewList;
         this.category = category;
     }
 
-    public List<Review> getReviewList() {
-        return reviewList;
-    }
-
-    public void setReviewList(List<Review> reviewList) {
-        this.reviewList = reviewList;
-    }
-
-    public void addVideo(String hrefVideo){
-        this.videos.add(hrefVideo);
-    }
-    public void addImages(String hrefImage){
-        this.images.add(hrefImage);
-    }
-    public void addReview(Review review){
-        this.reviewList.add(review);
-
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Entrepreneurship that = (Entrepreneurship) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(images, that.images) && Objects.equals(description, that.description) && Objects.equals(videos, that.videos) && Objects.equals(goal, that.goal) && category == that.category && Objects.equals(reviewList, that.reviewList);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(images, that.images) && Objects.equals(description, that.description) && Objects.equals(videos, that.videos) && Objects.equals(goal, that.goal) && category == that.category;
     }
 
     @Override

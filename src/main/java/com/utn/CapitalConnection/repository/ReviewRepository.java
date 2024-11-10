@@ -11,17 +11,12 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
-    @Query("SELECT r FROM ReviewEntity r JOIN r.entrepreneurships e WHERE e.id = :entrepreneurshipId")
-    List<ReviewEntity> findReviewsByEntrepreneurshipId(@Param("entrepreneurshipId") Long entrepreneurshipId);
+
 
     @Query("SELECT r FROM ReviewEntity r WHERE r.stars = :stars")
     List<ReviewEntity> findReviewsByStars(@Param("stars") float stars);
 
-    @Query("SELECT COUNT(r) FROM ReviewEntity r JOIN r.entrepreneurships e WHERE e.id = :entrepreneurshipId")
-    long countReviewsByEntrepreneurshipId(@Param("entrepreneurshipId") Long entrepreneurshipId);
 
-    @Query("SELECT AVG(r.stars) FROM ReviewEntity r JOIN r.entrepreneurships e WHERE e.id = :entrepreneurshipId")
-    Double findAverageStarsByEntrepreneurshipId(@Param("entrepreneurshipId") Long entrepreneurshipId);
 
     @Query("SELECT r FROM ReviewEntity r WHERE r.idUser = :idUser")
     List<ReviewEntity> findByUserId(@Param("idUser") String idUser);

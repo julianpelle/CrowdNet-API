@@ -36,24 +36,6 @@ public class EntrepreneurshipService {
 
 
 
-    @Autowired
-    private ReviewRepository reviewRepository;
-
-    public void addReviewToEntrepreneurship(Long entrepreneurshipId, ReviewEntity newReview) {
-        // Paso 1: Obtener el emprendimiento
-        EntrepreneurshipEntity entrepreneurship = entrepreneurshipRepository.findById(entrepreneurshipId)
-                .orElseThrow(() -> new EntityNotFoundException("Entrepreneurship not found"));
-
-        // Paso 2: Asociar la reseña al emprendimiento
-        entrepreneurship.addReview(newReview);
-
-        // Paso 3: Guardar la reseña (esto es opcional, si necesitas persistirla directamente)
-        reviewRepository.save(newReview);
-
-        // Paso 4: Guardar el emprendimiento (con cascada se persisten las reseñas también)
-        entrepreneurshipRepository.save(entrepreneurship);
-    }
-
     public EntrepreneurshipEntity getEntrepreneurshipById(Long id) {
         return entrepreneurshipRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Entrepreneurship not found with id: " + id));
@@ -63,18 +45,10 @@ public class EntrepreneurshipService {
         Page<EntrepreneurshipEntity> entity;
 
         // Filtrado
-        if (name != null && stars != null && goal != null) {
-            entity = entrepreneurshipRepository.findByNameStarsGoal(name, stars, goal, pageable);
-        } else if (name != null && stars != null) {
-            entity = entrepreneurshipRepository.findByNameAndStars(name, stars, pageable);
-        } else if (name != null && goal != null) {
+        if (name != null && goal != null) {
             entity = entrepreneurshipRepository.findByNameAndGoal(name, goal, pageable);
-        } else if (stars != null && goal != null) {
-            entity = entrepreneurshipRepository.findByStarsAndGoal(stars, goal, pageable);
-        } else if (name != null) {
+        }  else if (name != null) {
             entity = entrepreneurshipRepository.findByNameContainingIgnoreCase(name, pageable);
-        } else if (stars != null) {
-            entity = entrepreneurshipRepository.findByStars(stars, pageable);
         } else if (goal != null) {
             entity = entrepreneurshipRepository.findByGoal(goal, pageable);
         } else {
@@ -94,17 +68,6 @@ public class EntrepreneurshipService {
         entrepreneurship.setImages(entity.getImages());
         entrepreneurship.setVideos(entity.getVideos());
 
-
-
-        List<Review> reviews = new ArrayList<>();
-        for (ReviewEntity reviewEntity : entity.getReviews()) {
-            Review review = new Review();
-            review.setIdReview(reviewEntity.getId());
-            review.setStars(reviewEntity.getStars());
-            review.setReviewText(reviewEntity.getReviewText());
-            reviews.add(review);
-        }
-        entrepreneurship.setReviewList(reviews);
 
         return entrepreneurship;
     }

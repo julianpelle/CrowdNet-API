@@ -5,9 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name = "reviews")
 public class ReviewEntity {
@@ -29,62 +26,45 @@ public class ReviewEntity {
     @Column(nullable = false)
     private String reviewText;
 
-    @ManyToMany
-    @JoinTable(
-            name = "reviews_about_entrepreneurship",
-            joinColumns = @JoinColumn(name = "review_id"),
-            inverseJoinColumns = @JoinColumn(name = "entrepreneurship_id"))
-    private List<EntrepreneurshipEntity> entrepreneurships = new ArrayList<>();
-
     public ReviewEntity() {
     }
 
-    public ReviewEntity(Long id,String idUser, float stars, String reviewText) {
+    public ReviewEntity(String idUser, float stars, String reviewText) {
         this.idUser = idUser;
-        this.id = id;
         this.stars = stars;
         this.reviewText = reviewText;
-        this.entrepreneurships = new ArrayList<>();
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
-    }
-
-    public float getStars() {
-        return stars;
-    }
-
-    public String getReviewText() {
-        return reviewText;
-    }
-
-    public @NotNull(message = "Stars must not be null") @Positive(message = "Stars must be positive") String getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(@NotNull(message = "Stars must not be null") @Positive(message = "Stars must be positive") String idUser) {
-        this.idUser = idUser;
-    }
-
-    public List<EntrepreneurshipEntity> getEntrepreneurships() {
-        return entrepreneurships;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
+    public float getStars() {
+        return stars;
+    }
+
     public void setStars(float stars) {
         this.stars = stars;
+    }
+
+    public String getReviewText() {
+        return reviewText;
     }
 
     public void setReviewText(String reviewText) {
         this.reviewText = reviewText;
     }
-
-    public void setEntrepreneurships(List<EntrepreneurshipEntity> entrepreneurships) {
-        this.entrepreneurships = entrepreneurships;
-    }
 }
-

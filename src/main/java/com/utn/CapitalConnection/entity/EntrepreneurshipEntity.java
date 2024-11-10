@@ -47,23 +47,6 @@ public class EntrepreneurshipEntity {
     @Column(name = "link_video")
     private List<String> videos;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "entrepreneurship_id")
-    private List<ReviewEntity> reviews = new ArrayList<>();
-
-
-
-    public void addReview(ReviewEntity review) {
-        if (review.getEntrepreneurships() == null) {
-            review.setEntrepreneurships(new ArrayList<>());
-        }
-        review.getEntrepreneurships().add(this);
-
-        // Persistir la reseña y el emprendimiento
-        this.reviews.add(review);
-        // Si estás usando CascadeType.ALL, no es necesario hacer explícitamente persist en el review.
-    }
-
 
     public EntrepreneurshipEntity() {
     }
@@ -76,7 +59,6 @@ public class EntrepreneurshipEntity {
         this.videos = videos;
         this.goal = goal;
         this.category = category;
-        this.reviews = reviews;
     }
 
     public String getId_user() {
@@ -115,9 +97,6 @@ public class EntrepreneurshipEntity {
         return category;
     }
 
-    public List<ReviewEntity> getReviews() {
-        return reviews;
-    }
 
     public void setId(Long id) {
         this.id = id;
@@ -147,9 +126,6 @@ public class EntrepreneurshipEntity {
         this.category = category;
     }
 
-    public void setReviews(List<ReviewEntity> reviews) {
-        this.reviews = reviews;
-    }
 
 
 }

@@ -4,12 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-import java.util.Objects;
-
 public class Review {
 
     private Long idReview;
-
     private String idUser;
 
     @NotNull(message = "Stars must not be null")
@@ -19,21 +16,15 @@ public class Review {
     @NotBlank(message = "Review text must not be blank")
     private String reviewText;
 
-    public Review() {
-    }
-
-    public Review(float stars, String reviewText) {
-        this.stars = stars;
-        this.reviewText = reviewText;
-    }
-
-    public Review(Long idReview,String idUser, float stars, String reviewText) {
+    // Constructor de DTO Review
+    public Review(Long idReview, String idUser, float stars, String reviewText) {
         this.idReview = idReview;
         this.idUser = idUser;
         this.stars = stars;
         this.reviewText = reviewText;
     }
 
+    // Getters y setters
     public Long getIdReview() {
         return idReview;
     }
@@ -64,26 +55,5 @@ public class Review {
 
     public void setReviewText(String reviewText) {
         this.reviewText = reviewText;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Review review)) return false;
-        return Float.compare(review.stars, stars) == 0 && Objects.equals(idReview, review.idReview) && Objects.equals(reviewText, review.reviewText);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(idReview, stars, reviewText);
-    }
-
-    @Override
-    public String toString() {
-        return "Review{" +
-                "idReview=" + idReview +
-                ", stars=" + stars +
-                ", reviewText='" + reviewText + '\'' +
-                '}';
     }
 }

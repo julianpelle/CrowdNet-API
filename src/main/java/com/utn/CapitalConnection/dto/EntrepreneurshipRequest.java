@@ -27,6 +27,9 @@ public class EntrepreneurshipRequest {
     @Schema(description = "Category of the entrepreneurship", example = "Technology")
     private String category;
 
+    @Schema(description = "Collected of the entrepreneurship", example = "10000.0")
+    private float collected;
+
     public Long getId() {
         return id;
     }
@@ -55,4 +58,11 @@ public class EntrepreneurshipRequest {
         return category;
     }
 
+    public float getCollected() {
+        return collected;
+    }
+
+    public void setCollected(float collected) {
+        this.collected = collected;
+    }
 }

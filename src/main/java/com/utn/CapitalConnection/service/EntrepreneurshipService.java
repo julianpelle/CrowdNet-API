@@ -142,10 +142,35 @@ public class EntrepreneurshipService {
         EntrepreneurshipEntity entrepreneurship = entrepreneurshipRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Entrepreneurship not found"));
 
-        if (patchData.getImages() != null) { // Borra o actualiza si llega un array vacío
+        if (patchData.getName() != null) {
+            entrepreneurship.setName(patchData.getName());
+        }
+
+        if (patchData.getDescription() != null) {
+            entrepreneurship.setDescription(patchData.getDescription());
+        }
+
+        if (patchData.getGoal() > 0) {
+            entrepreneurship.setGoal(BigDecimal.valueOf(patchData.getGoal()));
+        }
+
+        if (patchData.getCategory() != null) {
+            entrepreneurship.setCategory(patchData.getCategory());
+        }
+
+        if (patchData.getImages() != null) {
             entrepreneurship.setImages(patchData.getImages());
+        }
+
+        if (patchData.getVideos() != null) {
+            entrepreneurship.setVideos(patchData.getVideos());
+        }
+
+        if (patchData.getCollected() > 0) {
+            entrepreneurship.setCollected(BigDecimal.valueOf(patchData.getCollected()));
         }
 
         return entrepreneurshipRepository.save(entrepreneurship);
     }
+
 }

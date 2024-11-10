@@ -22,7 +22,8 @@ public class ReviewService {
                 review.getIdUser(),
                 review.getStars(),
                 review.getReviewText(),
-                review.getIdEntrepreneurship()
+                review.getIdEntrepreneurship(),
+                review.getUsername()
         );
     }
 
@@ -35,7 +36,8 @@ public class ReviewService {
                 reviewEntity.getIdUser(),
                 reviewEntity.getStars(),
                 reviewEntity.getReviewText(),
-                reviewEntity.getIdEntrepreneurship()
+                reviewEntity.getIdEntrepreneurship(),
+                reviewEntity.getUsername()
         );
     }
 

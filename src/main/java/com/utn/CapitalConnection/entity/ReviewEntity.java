@@ -17,6 +17,10 @@ public class ReviewEntity {
     @Column(nullable = false)
     private String idUser;
 
+    @NotBlank(message = "Name must not be blank")
+    @Column(nullable = false, length = 50)
+    private String username;
+
     @NotNull(message = "Stars must not be null")
     @Positive(message = "Stars must be positive")
     @Column(nullable = false)
@@ -34,10 +38,11 @@ public class ReviewEntity {
     public ReviewEntity() {
     }
 
-    public ReviewEntity(String idUser, float stars, String reviewText, Long idEntrepreneurship) {
+    public ReviewEntity(String idUser, float stars, String reviewText, Long idEntrepreneurship, String username) {
         this.idUser = idUser;
         this.stars = stars;
         this.reviewText = reviewText;
+        this.username=username;
         this.idEntrepreneurship = idEntrepreneurship;
     }
 
@@ -80,5 +85,13 @@ public class ReviewEntity {
 
     public void setReviewText(String reviewText) {
         this.reviewText = reviewText;
+    }
+
+    public @NotBlank(message = "Name must not be blank") String getUsername() {
+        return username;
+    }
+
+    public void setUsername(@NotBlank(message = "Name must not be blank") String username) {
+        this.username = username;
     }
 }

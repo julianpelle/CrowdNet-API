@@ -24,6 +24,7 @@ public class EntrepreneurshipEntity {
     @Column(nullable = true) // Permite que sea null
     private String id_user;
 
+
     @NotBlank(message = "Name must not be blank")
     @Column(nullable = false, length = 50)
     private String name;

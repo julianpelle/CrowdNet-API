@@ -8,6 +8,7 @@ public class Review {
 
     private Long idReview;
     private String idUser;
+    private String username;
 
     @NotNull(message = "Stars must not be null")
     @Positive(message = "Stars must be positive")
@@ -21,12 +22,13 @@ public class Review {
 
 
     // Constructor de DTO Review
-    public Review(Long idReview, String idUser, float stars, String reviewText, Long idEntrepreneurship) {
+    public Review(Long idReview, String idUser, float stars, String reviewText, Long idEntrepreneurship, String username) {
         this.idReview = idReview;
         this.idUser = idUser;
         this.stars = stars;
         this.reviewText = reviewText;
         this.idEntrepreneurship = idEntrepreneurship;
+        this.username = username;
     }
 
     // Getters y setters
@@ -68,5 +70,13 @@ public class Review {
 
     public void setReviewText(String reviewText) {
         this.reviewText = reviewText;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

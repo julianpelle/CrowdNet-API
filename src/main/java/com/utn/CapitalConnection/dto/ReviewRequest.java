@@ -11,6 +11,10 @@ public class ReviewRequest {
     @Schema(description = "ID of the user who wrote the review", example = "Three")
     private String idUser;
 
+    @Schema(description = "Nickname of the user who wrote the review", example = "Three")
+    private String username;
+
+
     @Schema(description = "Star rating of the review", example = "4.5")
     private float stars;
 
@@ -60,5 +64,13 @@ public class ReviewRequest {
 
     public void setEntrepreneurshipId(Long entrepreneurshipId) {
         this.entrepreneurshipId = entrepreneurshipId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

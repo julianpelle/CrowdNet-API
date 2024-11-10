@@ -22,6 +22,11 @@ public class ReviewEntity {
     @Column(nullable = false)
     private float stars;
 
+    @NotNull(message = "id_entrepreneurship must not be null")
+    @Positive(message = "id_entrepreneurship must be positive")
+    @Column(nullable = false)
+    private Long idEntrepreneurship;
+
     @NotBlank(message = "Review text must not be blank")
     @Column(nullable = false)
     private String reviewText;
@@ -29,10 +34,11 @@ public class ReviewEntity {
     public ReviewEntity() {
     }
 
-    public ReviewEntity(String idUser, float stars, String reviewText) {
+    public ReviewEntity(String idUser, float stars, String reviewText, Long idEntrepreneurship) {
         this.idUser = idUser;
         this.stars = stars;
         this.reviewText = reviewText;
+        this.idEntrepreneurship = idEntrepreneurship;
     }
 
     // Getters and Setters
@@ -50,6 +56,14 @@ public class ReviewEntity {
 
     public void setIdUser(String idUser) {
         this.idUser = idUser;
+    }
+
+    public @NotNull(message = "idEntrepreneurship must not be null") @Positive(message = "idEntrepreneurship must be positive") Long getIdEntrepreneurship() {
+        return idEntrepreneurship;
+    }
+
+    public void setIdEntrepreneurship(@NotNull(message = "id_entrepreneurship must not be null") @Positive(message = "idEntrepreneurship must be positive") Long idEntrepreneurship) {
+        this.idEntrepreneurship = idEntrepreneurship;
     }
 
     public float getStars() {

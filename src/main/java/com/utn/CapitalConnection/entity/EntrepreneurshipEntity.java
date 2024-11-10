@@ -3,9 +3,11 @@ package com.utn.CapitalConnection.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -34,6 +36,10 @@ public class EntrepreneurshipEntity {
     @Column(nullable = false)
     private BigDecimal goal;
 
+    @Positive(message = "collected must be a positive number")
+    @Column(nullable = false)
+    private BigDecimal collected;
+
     @Column(nullable = false)
     private String category;
 
@@ -51,7 +57,7 @@ public class EntrepreneurshipEntity {
     public EntrepreneurshipEntity() {
     }
 
-    public EntrepreneurshipEntity(String name,String id_user, ArrayList<String> images, String description, ArrayList<String> videos, BigDecimal goal, String category, List<ReviewEntity> reviews) {
+    public EntrepreneurshipEntity(String name,String id_user, ArrayList<String> images, String description, ArrayList<String> videos, BigDecimal goal, String category, BigDecimal collected) {
         this.name = name;
         this.id_user = id_user;
         this.images = images;
@@ -59,6 +65,7 @@ public class EntrepreneurshipEntity {
         this.videos = videos;
         this.goal = goal;
         this.category = category;
+        this.collected = collected;
     }
 
     public String getId_user() {
@@ -87,6 +94,14 @@ public class EntrepreneurshipEntity {
 
     public List<String> getVideos() {
         return videos;
+    }
+
+    public @Positive(message = "collected must be a positive number") BigDecimal getCollected() {
+        return collected;
+    }
+
+    public void setCollected(@Positive(message = "collected must be a positive number") BigDecimal collected) {
+        this.collected = collected;
     }
 
     public BigDecimal getGoal() {

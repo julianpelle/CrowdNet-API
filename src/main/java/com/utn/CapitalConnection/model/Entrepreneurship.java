@@ -2,6 +2,7 @@ package com.utn.CapitalConnection.model;
 
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,11 +17,12 @@ private String description;
 private List<String> videos;
 private BigDecimal goal;
 private String category;
+private BigDecimal collected;
 
     public Entrepreneurship() {
     }
 
-    public Entrepreneurship(String id_user,String name, String description, BigDecimal goal, String category) {
+    public Entrepreneurship(String id_user,String name, String description, BigDecimal goal, String category, BigDecimal collected) {
         this.id_user = id_user;
         this.name = name;
         this.images = new ArrayList<>();
@@ -28,9 +30,11 @@ private String category;
         this.videos = new ArrayList<>();
         this.goal = goal;
         this.category = category;
+        this.collected = collected;
+
     }
 
-    public Entrepreneurship(Long id,String id_user, String name, String description, BigDecimal goal, String category) {
+    public Entrepreneurship(Long id,String id_user, String name, String description, BigDecimal goal, String category, BigDecimal collected) {
         this.id_user = id_user;
         this.id = id;
         this.name = name;
@@ -39,6 +43,8 @@ private String category;
         this.videos = new ArrayList<>();
         this.goal = goal;
         this.category = category;
+        this.collected = collected;
+
     }
 
 
@@ -68,6 +74,14 @@ private String category;
 
     public List<String> getImages() {
         return images;
+    }
+
+    public BigDecimal getCollected() {
+        return collected;
+    }
+
+    public void setCollected(BigDecimal collected) {
+        this.collected = collected;
     }
 
     public void setImages(List<String> images) {

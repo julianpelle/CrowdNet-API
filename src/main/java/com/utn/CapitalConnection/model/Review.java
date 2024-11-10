@@ -16,12 +16,17 @@ public class Review {
     @NotBlank(message = "Review text must not be blank")
     private String reviewText;
 
+
+    private Long idEntrepreneurship;
+
+
     // Constructor de DTO Review
-    public Review(Long idReview, String idUser, float stars, String reviewText) {
+    public Review(Long idReview, String idUser, float stars, String reviewText, Long idEntrepreneurship) {
         this.idReview = idReview;
         this.idUser = idUser;
         this.stars = stars;
         this.reviewText = reviewText;
+        this.idEntrepreneurship = idEntrepreneurship;
     }
 
     // Getters y setters
@@ -39,6 +44,14 @@ public class Review {
 
     public void setIdUser(String idUser) {
         this.idUser = idUser;
+    }
+
+    public Long getIdEntrepreneurship() {
+        return idEntrepreneurship;
+    }
+
+    public void setIdEntrepreneurship(Long idEntrepreneurship) {
+        this.idEntrepreneurship = idEntrepreneurship;
     }
 
     public float getStars() {

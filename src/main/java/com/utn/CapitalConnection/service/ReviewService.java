@@ -21,7 +21,8 @@ public class ReviewService {
         return new ReviewEntity(
                 review.getIdUser(),
                 review.getStars(),
-                review.getReviewText()
+                review.getReviewText(),
+                review.getIdEntrepreneurship()
         );
     }
 
@@ -33,7 +34,8 @@ public class ReviewService {
                 reviewEntity.getId(),
                 reviewEntity.getIdUser(),
                 reviewEntity.getStars(),
-                reviewEntity.getReviewText()
+                reviewEntity.getReviewText(),
+                reviewEntity.getIdEntrepreneurship()
         );
     }
 
@@ -58,6 +60,11 @@ public class ReviewService {
     public Iterable<ReviewEntity> getAllReviews() {
         return reviewRepository.findAll();
     }
+
+    public List<ReviewEntity> getReviewsByEntrepreneurship(Long idEntrepreneurship) {
+        return reviewRepository.findByIdEntrepreneurship(idEntrepreneurship);
+    }
+
 
     /**
      * Método para obtener reseñas por estrellas.

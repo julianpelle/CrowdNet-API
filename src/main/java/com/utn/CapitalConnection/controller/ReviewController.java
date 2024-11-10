@@ -46,22 +46,10 @@ public class ReviewController {
         return reviewService.convertToModel(savedReview);
     }
 
-
-
-    @Operation(summary = "Get a review by ID", description = "Returns details of a specific review.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Review found"),
-            @ApiResponse(responseCode = "404", description = "Review not found")
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<ReviewEntity> getReviewById(
-            @Parameter(description = "ID of the review to retrieve") @PathVariable @NotNull Long id) {
-        return Optional.ofNullable(reviewService.getReviewById(id))
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/{idEntrepreneurship}")
+    public List<ReviewEntity> getReviewsByEntrepreneurship(@PathVariable Long idEntrepreneurship ) {
+        return reviewService.getReviewsByEntrepreneurship(idEntrepreneurship );
     }
-
-
 
     @Operation(summary = "Update an existing review", description = "Updates the details of a review.")
     @ApiResponses(value = {

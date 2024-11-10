@@ -11,7 +11,8 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
-
+    // Método para obtener las reseñas por idEntrepreneurship
+    List<ReviewEntity> findByIdEntrepreneurship(Long idEntrepreneurship);
 
     @Query("SELECT r FROM ReviewEntity r WHERE r.stars = :stars")
     List<ReviewEntity> findReviewsByStars(@Param("stars") float stars);

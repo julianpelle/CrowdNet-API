@@ -8,6 +8,7 @@ import com.utn.CapitalConnection.exception.ResourceNotFoundException;
 import com.utn.CapitalConnection.model.Entrepreneurship;
 import com.utn.CapitalConnection.model.Review;
 import com.utn.CapitalConnection.repository.EntrepreneurshipRepository;
+import com.utn.CapitalConnection.repository.ReviewRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,6 +33,26 @@ public class EntrepreneurshipService {
 
     @Autowired
     private EntrepreneurshipRepository entrepreneurshipRepository;
+
+
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    public void addReviewToEntrepreneurship(Long entrepreneurshipId, ReviewEntity newReview) {
+        // Paso 1: Obtener el emprendimiento
+        EntrepreneurshipEntity entrepreneurship = entrepreneurshipRepository.findById(entrepreneurshipId)
+                .orElseThrow(() -> new EntityNotFoundException("Entrepreneurship not found"));
+
+        // Paso 2: Asociar la reseña al emprendimiento
+        entrepreneurship.addReview(newReview);
+
+        // Paso 3: Guardar la reseña (esto es opcional, si necesitas persistirla directamente)
+        reviewRepository.save(newReview);
+
+        // Paso 4: Guardar el emprendimiento (con cascada se persisten las reseñas también)
+        entrepreneurshipRepository.save(entrepreneurship);
+    }
 
     public EntrepreneurshipEntity getEntrepreneurshipById(Long id) {
         return entrepreneurshipRepository.findById(id)

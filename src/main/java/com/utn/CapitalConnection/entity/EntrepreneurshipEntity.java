@@ -27,7 +27,7 @@ public class EntrepreneurshipEntity {
     private String name;
 
     @NotBlank(message = "Description must not be blank")
-    @Column(nullable = false)
+    @Column(length = 1000) // Si has cambiado el tamaño de la columna
     private String description;
 
     @Positive(message = "Goal must be a positive number")
@@ -58,6 +58,10 @@ public class EntrepreneurshipEntity {
             review.setEntrepreneurships(new ArrayList<>());
         }
         review.getEntrepreneurships().add(this);
+
+        // Persistir la reseña y el emprendimiento
+        this.reviews.add(review);
+        // Si estás usando CascadeType.ALL, no es necesario hacer explícitamente persist en el review.
     }
 
 

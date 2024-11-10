@@ -1,15 +1,19 @@
 package com.utn.CapitalConnection.controller;
 
+import com.utn.CapitalConnection.dto.ReviewRequest;
 import com.utn.CapitalConnection.entity.ReviewEntity;
+import com.utn.CapitalConnection.service.EntrepreneurshipService;
 import com.utn.CapitalConnection.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,17 +33,27 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @Operation(summary = "Create a new review", description = "Saves a new review in the database.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Review created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+    @Autowired
+    private EntrepreneurshipService entrepreneurshipService;
+
     @PostMapping
-    public ResponseEntity<ReviewEntity> createReview(@Parameter(description = "Details of the review to create")
-                                                     @Valid @RequestBody ReviewEntity review) {
-        ReviewEntity createdReview = reviewService.saveReview(review);
-        return ResponseEntity.status(201).body(createdReview);
+    public ResponseEntity<String> addReview(@RequestBody ReviewRequest reviewRequest) {
+        try {
+            // Convertir la solicitud a una entidad ReviewEntity
+            ReviewEntity newReview = new ReviewEntity();
+            newReview.setIdUser(reviewRequest.getIdUser());
+            newReview.setStars(reviewRequest.getStars());
+            newReview.setReviewText(reviewRequest.getReviewText());
+
+            // Llamar al servicio para asociar la reseña con el emprendimiento
+            entrepreneurshipService.addReviewToEntrepreneurship(reviewRequest.getEntrepreneurshipId(), newReview);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Reseña añadida exitosamente");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Emprendimiento no encontrado");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al agregar la reseña");
+        }
     }
 
     @Operation(summary = "Get all reviews", description = "Returns a list of all reviews.")

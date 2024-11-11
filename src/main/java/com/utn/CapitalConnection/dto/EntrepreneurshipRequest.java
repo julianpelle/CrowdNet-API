@@ -30,6 +30,9 @@ public class EntrepreneurshipRequest {
     @Schema(description = "Collected of the entrepreneurship", example = "10000.0")
     private float collected;
 
+    @Schema(description = "activated of the entrepreneurship", example = "10000.0")
+    private boolean isActivated;
+
     public Long getId() {
         return id;
     }
@@ -56,6 +59,14 @@ public class EntrepreneurshipRequest {
 
     public String getCategory() {
         return category;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
+
+    public void setIsActivated(Boolean isActivated) {
+        this.isActivated = isActivated;
     }
 
     public float getCollected() {

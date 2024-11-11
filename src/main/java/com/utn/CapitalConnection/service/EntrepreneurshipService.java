@@ -68,7 +68,7 @@ public class EntrepreneurshipService {
         entrepreneurship.setCategory(entity.getCategory());
         entrepreneurship.setImages(entity.getImages());
         entrepreneurship.setVideos(entity.getVideos());
-
+        entrepreneurship.setActivated(entity.isActivated());
 
         return entrepreneurship;
     }
@@ -90,6 +90,15 @@ public class EntrepreneurshipService {
     public EntrepreneurshipEntity createEntrepreneurship(EntrepreneurshipEntity entrepreneurship) {
         System.out.println(entrepreneurship);
         return entrepreneurshipRepository.save(entrepreneurship);
+    }
+
+    @Transactional
+    public void deactivateEntrepreneurship(Long id) {
+        EntrepreneurshipEntity entrepreneurship = entrepreneurshipRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Entrepreneurship not found with id: " + id));
+        entrepreneurship.setIsActivated(false);  // Cambiar setisActivated por setIsActivated
+// Desactivamos el emprendimiento
+        entrepreneurshipRepository.save(entrepreneurship); // Guardamos la entidad actualizada
     }
 
     // PUT update an entrepreneurship by ID

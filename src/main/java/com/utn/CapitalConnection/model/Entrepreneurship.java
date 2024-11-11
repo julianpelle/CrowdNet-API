@@ -18,11 +18,12 @@ private List<String> videos;
 private BigDecimal goal;
 private String category;
 private BigDecimal collected;
+private Boolean activated;
 
     public Entrepreneurship() {
     }
 
-    public Entrepreneurship(String idUser,String name, String description, BigDecimal goal, String category, BigDecimal collected) {
+    public Entrepreneurship(String idUser,String name, String description, BigDecimal goal, String category, BigDecimal collected, Boolean activated) {
         this.idUser = idUser;
         this.name = name;
         this.images = new ArrayList<>();
@@ -31,10 +32,10 @@ private BigDecimal collected;
         this.goal = goal;
         this.category = category;
         this.collected = collected;
-
+        this.activated = activated;
     }
 
-    public Entrepreneurship(Long id,String idUser, String name, String description, BigDecimal goal, String category, BigDecimal collected) {
+    public Entrepreneurship(Long id,String idUser, String name, String description, BigDecimal goal, String category, BigDecimal collected, Boolean activated) {
         this.idUser = idUser;
         this.id = id;
         this.name = name;
@@ -44,7 +45,7 @@ private BigDecimal collected;
         this.goal = goal;
         this.category = category;
         this.collected = collected;
-
+        this.activated = activated;
     }
 
 
@@ -114,6 +115,14 @@ private BigDecimal collected;
 
     public String getCategory() {
         return category;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
     }
 
     public void setCategory(String category) {

@@ -131,16 +131,16 @@ public class EntrepreneurshipController {
         return ResponseEntity.ok(updated);
     }
 
-    @Operation(summary = "Delete an entrepreneurship by ID")
+    @Operation(summary = "Deactivate an entrepreneurship by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Entrepreneurship deleted",
+            @ApiResponse(responseCode = "204", description = "Entrepreneurship deactivated",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Entrepreneurship not found",
                     content = @Content)
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEntrepreneurship(@PathVariable Long id) {
-        entrepreneurshipService.deleteEntrepreneurship(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deactivateEntrepreneurship(@PathVariable Long id) {
+        entrepreneurshipService.deactivateEntrepreneurship(id);
+        return ResponseEntity.noContent().build();  // Respondemos que la operación se realizó correctamente
     }
 }

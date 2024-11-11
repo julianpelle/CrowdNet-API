@@ -54,11 +54,15 @@ public class EntrepreneurshipEntity {
     @Column(name = "link_video")
     private List<String> videos;
 
+    @Column(nullable = false)
+    private Boolean isActivated = true; // Este campo indica si el emprendimiento está activo
+
+    // Getters y setters
 
     public EntrepreneurshipEntity() {
     }
 
-    public EntrepreneurshipEntity(String name,String idUser, ArrayList<String> images, String description, ArrayList<String> videos, BigDecimal goal, String category, BigDecimal collected) {
+    public EntrepreneurshipEntity(String name,String idUser, ArrayList<String> images, String description, ArrayList<String> videos, BigDecimal goal, String category, BigDecimal collected, Boolean isActivated) {
         this.name = name;
         this.idUser = idUser;
         this.images = images;
@@ -67,6 +71,7 @@ public class EntrepreneurshipEntity {
         this.goal = goal;
         this.category = category;
         this.collected = collected;
+        this.isActivated = isActivated;
     }
 
     public String getIdUser() {
@@ -114,6 +119,7 @@ public class EntrepreneurshipEntity {
     }
 
 
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -142,6 +148,12 @@ public class EntrepreneurshipEntity {
         this.category = category;
     }
 
+    public boolean isActivated() {
+        return isActivated;
+    }
 
+    public void setIsActivated(Boolean isActivated) {
+        this.isActivated = isActivated;
+    }
 
 }

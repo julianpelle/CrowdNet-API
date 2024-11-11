@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Entrepreneurship {
 
     private Long id;
-    private String id_user;
+    private String idUser;
 private String name;
 private List<String> images;
 private String description;
@@ -22,8 +22,8 @@ private BigDecimal collected;
     public Entrepreneurship() {
     }
 
-    public Entrepreneurship(String id_user,String name, String description, BigDecimal goal, String category, BigDecimal collected) {
-        this.id_user = id_user;
+    public Entrepreneurship(String idUser,String name, String description, BigDecimal goal, String category, BigDecimal collected) {
+        this.idUser = idUser;
         this.name = name;
         this.images = new ArrayList<>();
         this.description = description;
@@ -34,8 +34,8 @@ private BigDecimal collected;
 
     }
 
-    public Entrepreneurship(Long id,String id_user, String name, String description, BigDecimal goal, String category, BigDecimal collected) {
-        this.id_user = id_user;
+    public Entrepreneurship(Long id,String idUser, String name, String description, BigDecimal goal, String category, BigDecimal collected) {
+        this.idUser = idUser;
         this.id = id;
         this.name = name;
         this.images = new ArrayList<>();
@@ -56,12 +56,12 @@ private BigDecimal collected;
         this.id = id;
     }
 
-    public String getId_user() {
-        return id_user;
+    public String getIdUser() {
+        return idUser;
     }
 
-    public void setId_user(String id_user) {
-        this.id_user = id_user;
+    public void setIdUser(String id_user) {
+        this.idUser = id_user;
     }
 
     public String getName() {

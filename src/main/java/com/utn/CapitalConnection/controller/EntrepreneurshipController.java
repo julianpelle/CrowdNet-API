@@ -44,10 +44,10 @@ public class EntrepreneurshipController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Reviews found")
     })
-    @GetMapping("/u/{id_user}")
+    @GetMapping("/u/{idUser}")
     public List<EntrepreneurshipEntity> getReviewsByUserId(@Parameter(description = "Id  to search for")
-                                                 @PathVariable @Positive String Id_user) {
-        return entrepreneurshipService.getEntrepreneurshipByUserId(Id_user);
+                                                 @PathVariable String idUser) {
+        return entrepreneurshipService.getEntrepreneurshipByUserId(idUser);
     }
     @Operation(summary = "Get entrepreneurship by name")
     @ApiResponses(value = {
@@ -67,8 +67,8 @@ public class EntrepreneurshipController {
     public ResponseEntity<EntrepreneurshipEntity> createEntrepreneurship(
             @RequestBody EntrepreneurshipEntity entrepreneurship) {
         // Verificar si idUser es null y manejarlo según sea necesario
-        if (entrepreneurship.getId_user() == null) {
-            entrepreneurship.setId_user("defaultUserId");
+        if (entrepreneurship.getIdUser() == null) {
+            entrepreneurship.setIdUser("defaultUserId");
         }
 
         EntrepreneurshipEntity createdEntrepreneurship = entrepreneurshipService.createEntrepreneurship(entrepreneurship);

@@ -67,6 +67,6 @@ public interface EntrepreneurshipRepository extends JpaRepository<Entrepreneursh
     Page<EntrepreneurshipEntity> findByNameContainingIgnoreCase(@Param("name") String name, Pageable pageable);
 
     // Método para encontrar por ID de usuario
-    @Query("SELECT r FROM EntrepreneurshipEntity r WHERE r.id_user = :id_user")
-    List<EntrepreneurshipEntity> findByUserId(@Param("id_user") String idUser);
+    @Query("SELECT r FROM EntrepreneurshipEntity r WHERE r.idUser = :idUser")
+    List<EntrepreneurshipEntity> findByUserId(@Param("idUser") String idUser);
 }

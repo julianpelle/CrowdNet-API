@@ -22,7 +22,7 @@ public class EntrepreneurshipEntity {
     private Long id;
 
     @Column(nullable = true) // Permite que sea null
-    private String id_user;
+    private String idUser;
 
 
     @NotBlank(message = "Name must not be blank")
@@ -58,9 +58,9 @@ public class EntrepreneurshipEntity {
     public EntrepreneurshipEntity() {
     }
 
-    public EntrepreneurshipEntity(String name,String id_user, ArrayList<String> images, String description, ArrayList<String> videos, BigDecimal goal, String category, BigDecimal collected) {
+    public EntrepreneurshipEntity(String name,String idUser, ArrayList<String> images, String description, ArrayList<String> videos, BigDecimal goal, String category, BigDecimal collected) {
         this.name = name;
-        this.id_user = id_user;
+        this.idUser = idUser;
         this.images = images;
         this.description = description;
         this.videos = videos;
@@ -69,12 +69,12 @@ public class EntrepreneurshipEntity {
         this.collected = collected;
     }
 
-    public String getId_user() {
-        return id_user;
+    public String getIdUser() {
+        return idUser;
     }
 
-    public void setId_user(String id_user) {
-        this.id_user = id_user;
+    public void setIdUser(String id_user) {
+        this.idUser = id_user;
     }
 
     public Long getId() {

@@ -109,4 +109,25 @@ public class ReviewService {
     public List<ReviewEntity> getAllReviews1() {
         return reviewRepository.findAll();
     }
+
+
+    public ReviewEntity updateReviewPatch(Long id, ReviewEntity reviewDetails) {
+        ReviewEntity reviewEntity = reviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Review not found with id: " + id));
+
+        // Aquí solo actualizamos los campos que realmente han sido enviados para su actualización
+        if (reviewDetails.getStars() != 0) {
+            reviewEntity.setStars(reviewDetails.getStars());
+        }
+        if (reviewDetails.getReviewText() != null && !reviewDetails.getReviewText().isEmpty()) {
+            reviewEntity.setReviewText(reviewDetails.getReviewText());
+        }
+        if (reviewDetails.getUsername() != null && !reviewDetails.getUsername().isEmpty()) {
+            reviewEntity.setUsername(reviewDetails.getUsername());
+        }
+
+        // De nuevo, si tienes más campos que quieras manejar, simplemente agrega más condiciones aquí.
+
+        return reviewRepository.save(reviewEntity);
+    }
 }

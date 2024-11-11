@@ -40,6 +40,7 @@ public class EntrepreneurshipService {
         return entrepreneurshipRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Entrepreneurship not found with id: " + id));
     }
+
     // Método para obtener emprendimientos con filtrado
     public Page<Entrepreneurship> findEntrepreneurship(String name, Float stars, BigDecimal goal, Pageable pageable) {
         Page<EntrepreneurshipEntity> entity;

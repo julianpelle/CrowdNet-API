@@ -143,4 +143,10 @@ public class EntrepreneurshipController {
         entrepreneurshipService.deactivateEntrepreneurship(id);
         return ResponseEntity.noContent().build();  // Respondemos que la operación se realizó correctamente
     }
+
+    @GetMapping("/active")
+    public ResponseEntity<Page<EntrepreneurshipEntity>> getActiveEntrepreneurships(Pageable pageable) {
+        Page<EntrepreneurshipEntity> activeEntrepreneurships = entrepreneurshipService.getActiveEntrepreneurships(pageable);
+        return ResponseEntity.ok(activeEntrepreneurships);
+    }
 }

@@ -78,7 +78,9 @@ public class EntrepreneurshipService {
         return entrepreneurshipRepository.findAll(pageable);
     }
 
-
+    public Page<EntrepreneurshipEntity> getActiveEntrepreneurships(Pageable pageable) {
+        return entrepreneurshipRepository.findByIsActivatedTrue(pageable);
+    }
 
     // GET by exact name
     public EntrepreneurshipEntity getEntrepreneurshipByName(@NotBlank String name) {

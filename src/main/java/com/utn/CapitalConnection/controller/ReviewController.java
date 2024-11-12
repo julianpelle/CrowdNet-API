@@ -1,6 +1,7 @@
     package com.utn.CapitalConnection.controller;
 
     import com.utn.CapitalConnection.dto.ReviewRequest;
+    import com.utn.CapitalConnection.entity.EntrepreneurshipEntity;
     import com.utn.CapitalConnection.entity.ReviewEntity;
     import com.utn.CapitalConnection.model.Review;
     import com.utn.CapitalConnection.service.EntrepreneurshipService;
@@ -9,18 +10,15 @@
     import io.swagger.v3.oas.annotations.Parameter;
     import io.swagger.v3.oas.annotations.responses.ApiResponse;
     import io.swagger.v3.oas.annotations.responses.ApiResponses;
-    import jakarta.persistence.EntityNotFoundException;
     import jakarta.validation.Valid;
     import jakarta.validation.constraints.NotNull;
-    import jakarta.validation.constraints.Positive;
     import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.http.HttpStatus;
+
     import org.springframework.http.ResponseEntity;
     import org.springframework.validation.annotation.Validated;
     import org.springframework.web.bind.annotation.*;
 
     import java.util.List;
-    import java.util.Optional;
 
     @RestController
     @RequestMapping("/reviews")

@@ -6,10 +6,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:4200") // La URL de tu frontend
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH");
+        // Solo permite CORS para endpoints específicos de EntrepreneurshipController y ReviewController
+        registry.addMapping("/entrepreneurships/**") // rutas de EntrepreneurshipController
+                .allowedOrigins("*") // Permitir cualquier origen
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH"); // Métodos permitidos
+
+        registry.addMapping("/reviews/**") // rutas de ReviewController
+                .allowedOrigins("*") // Permitir cualquier origen
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH"); // Métodos permitidos
     }
 }

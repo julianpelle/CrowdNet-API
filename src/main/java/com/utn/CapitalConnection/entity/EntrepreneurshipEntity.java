@@ -1,5 +1,6 @@
 package com.utn.CapitalConnection.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -37,7 +38,7 @@ public class EntrepreneurshipEntity {
     @Column(nullable = false)
     private BigDecimal goal;
 
-    @Positive(message = "collected must be a positive number")
+    @Min(value = 0, message = "Collected must be zero or greater")
     @Column(nullable = false)
     private BigDecimal collected;
 
@@ -57,7 +58,9 @@ public class EntrepreneurshipEntity {
     @Column(nullable = false)
     private Boolean isActivated = true; // Este campo indica si el emprendimiento está activo
 
-    // Getters y setters
+    @OneToMany(mappedBy = "entrepreneurship")
+    @JsonManagedReference
+    private List<ReviewEntity> reviews;
 
     public EntrepreneurshipEntity() {
     }
@@ -65,13 +68,14 @@ public class EntrepreneurshipEntity {
     public EntrepreneurshipEntity(String name,String idUser, ArrayList<String> images, String description, ArrayList<String> videos, BigDecimal goal, String category, BigDecimal collected, Boolean isActivated) {
         this.name = name;
         this.idUser = idUser;
-        this.images = images;
+        this.images = (images != null) ? images : new ArrayList<>(); // Inicializamos si es nulo
         this.description = description;
-        this.videos = videos;
+        this.videos = (videos != null) ? videos : new ArrayList<>(); // Inicializamos si es nulo
         this.goal = goal;
         this.category = category;
-        this.collected = collected;
-        this.isActivated = isActivated;
+        this.collected = collected != null ? collected : BigDecimal.ZERO; // Permitir 0 como valor por defecto
+        this.isActivated = (isActivated != null) ? isActivated : true; // Por defecto true si es null
+        this.reviews = new ArrayList<>(); // Inicializamos la lista de reseñas
     }
 
     public String getIdUser() {
@@ -156,4 +160,12 @@ public class EntrepreneurshipEntity {
         this.isActivated = isActivated;
     }
 
+
+    public List<ReviewEntity> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewEntity> reviews) {
+        this.reviews = reviews;
+    }
 }

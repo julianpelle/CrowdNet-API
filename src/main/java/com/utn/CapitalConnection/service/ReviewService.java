@@ -1,29 +1,52 @@
 package com.utn.CapitalConnection.service;
 
+import com.utn.CapitalConnection.dto.ReviewRequest;
+import com.utn.CapitalConnection.entity.EntrepreneurshipEntity;
 import com.utn.CapitalConnection.entity.ReviewEntity;
+import com.utn.CapitalConnection.exception.EntrepreneurshipNotFoundException;
 import com.utn.CapitalConnection.model.Review;
+import com.utn.CapitalConnection.repository.EntrepreneurshipRepository;
 import com.utn.CapitalConnection.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
+    ReviewRepository reviewRepository;
+    EntrepreneurshipRepository entrepreneurshipRepository;
 
     @Autowired
-    private ReviewRepository reviewRepository;
+    public ReviewService(ReviewRepository reviewRepository, EntrepreneurshipRepository entrepreneurshipRepository) {
+        this.reviewRepository = reviewRepository;
+        this.entrepreneurshipRepository = entrepreneurshipRepository;
+    };
 
     /**
      * Método para convertir Review a ReviewEntity.
      */
-    public ReviewEntity convertToEntity(Review review) {
+    public ReviewEntity convertToEntity(ReviewRequest review) {
+        if (review.getIdEntrepreneurship() == null) {
+            System.out.println(review.getIdEntrepreneurship());
+
+            throw new IllegalArgumentException("The ID must not be null FORRO");
+
+        }else{
+            System.out.println(review.getIdEntrepreneurship());
+        }
+        EntrepreneurshipEntity entrepreneurship = entrepreneurshipRepository.findById(review.getIdEntrepreneurship())
+                .orElseThrow(() -> new EntrepreneurshipNotFoundException("Entrepreneurship not found with id: " + review.getIdEntrepreneurship()));
+
+
         return new ReviewEntity(
                 review.getIdUser(),
                 review.getStars(),
                 review.getReviewText(),
-                review.getIdEntrepreneurship(),
-                review.getUsername()
+                review.getUsername(),
+                entrepreneurship
         );
     }
 
@@ -32,11 +55,11 @@ public class ReviewService {
      */
     public Review convertToModel(ReviewEntity reviewEntity) {
         return new Review(
-                reviewEntity.getId(),
+                reviewEntity.getIdReview(),
                 reviewEntity.getIdUser(),
                 reviewEntity.getStars(),
                 reviewEntity.getReviewText(),
-                reviewEntity.getIdEntrepreneurship(),
+                reviewEntity.getEntrepreneurship().getId(),
                 reviewEntity.getUsername()
         );
     }
@@ -63,11 +86,21 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
-    public List<ReviewEntity> getReviewsByEntrepreneurship(Long idEntrepreneurship) {
-        return reviewRepository.findByIdEntrepreneurship(idEntrepreneurship);
+    public List<ReviewRequest> getReviewsByEntrepreneurship(Long idEntrepreneurship) {
+        // Aquí obtienes los ReviewEntity y luego los conviertes a ReviewDTO
+        List<ReviewEntity> reviewEntities = reviewRepository.findByEntrepreneurshipId(idEntrepreneurship);
+
+        return reviewEntities.stream()
+                .map(reviewEntity -> new ReviewRequest(
+                        reviewEntity.getIdReview(),
+                        reviewEntity.getIdUser(),
+                        reviewEntity.getUsername(),
+                        reviewEntity.getStars(),
+                        reviewEntity.getReviewText(),
+                        reviewEntity.getEntrepreneurship().getId()
+                        ))
+                .collect(Collectors.toList());
     }
-
-
     /**
      * Método para obtener reseñas por estrellas.
      */

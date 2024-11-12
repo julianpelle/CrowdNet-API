@@ -36,7 +36,7 @@
         private EntrepreneurshipService entrepreneurshipService;
 
         @PostMapping
-        public Review createReview(@RequestBody Review review) {
+        public Review createReview(@RequestBody ReviewRequest review) {
             // Convertir Review a ReviewEntity
             ReviewEntity reviewEntity = reviewService.convertToEntity(review);
             ReviewEntity savedReview = reviewService.createReview(reviewEntity);
@@ -45,8 +45,8 @@
         }
 
         @GetMapping("/{idEntrepreneurship}")
-        public List<ReviewEntity> getReviewsByEntrepreneurship(@PathVariable Long idEntrepreneurship ) {
-            return reviewService.getReviewsByEntrepreneurship(idEntrepreneurship );
+        public List<ReviewRequest> getReviewsByEntrepreneurship(@PathVariable Long idEntrepreneurship) {
+            return reviewService.getReviewsByEntrepreneurship(idEntrepreneurship);
         }
 
         @Operation(summary = "Update an existing review", description = "Updates the details of a review.")

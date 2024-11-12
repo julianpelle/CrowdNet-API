@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Positive;
 
 public class Review {
 
-    private Long idReview;
+    private Long id;
     private String idUser;
     private String username;
 
@@ -18,26 +18,25 @@ public class Review {
     private String reviewText;
 
 
-    private Long idEntrepreneurship;
+    private Long entrepreneurshipId;  // Aquí solo necesitas el ID del emprendimiento
 
-
-    // Constructor de DTO Review
-    public Review(Long idReview, String idUser, float stars, String reviewText, Long idEntrepreneurship, String username) {
-        this.idReview = idReview;
+    // Constructor de Review
+    public Review(Long id, String idUser, float stars, String reviewText, Long entrepreneurshipId, String username) {
+        this.id = id;
         this.idUser = idUser;
         this.stars = stars;
         this.reviewText = reviewText;
-        this.idEntrepreneurship = idEntrepreneurship;
+        this.entrepreneurshipId = entrepreneurshipId;
         this.username = username;
     }
 
     // Getters y setters
-    public Long getIdReview() {
-        return idReview;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdReview(Long idReview) {
-        this.idReview = idReview;
+    public void setId(Long idReview) {
+        this.id = idReview;
     }
 
     public String getIdUser() {
@@ -48,12 +47,12 @@ public class Review {
         this.idUser = idUser;
     }
 
-    public Long getIdEntrepreneurship() {
-        return idEntrepreneurship;
+    public Long getEntrepreneurshipId() {
+        return entrepreneurshipId;
     }
 
-    public void setIdEntrepreneurship(Long idEntrepreneurship) {
-        this.idEntrepreneurship = idEntrepreneurship;
+    public void setEntrepreneurshipId(Long entrepreneurshipId) {
+        this.entrepreneurshipId = entrepreneurshipId;
     }
 
     public float getStars() {

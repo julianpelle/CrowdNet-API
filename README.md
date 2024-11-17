@@ -7,7 +7,6 @@ CrowdNet API es una aplicación backend desarrollada en **Java** utilizando el f
 Antes de comenzar, asegúrate de tener instalados en tu equipo:
 - **Java 21** o superior
 - **Maven** (gestor de dependencias)
-- **MySQL** (servidor de base de datos)
 
 ## Instalación y configuración
 
